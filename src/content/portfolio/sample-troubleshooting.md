@@ -5,6 +5,7 @@ role: "[TODO] 역할"
 techStack: ["[TODO]"]
 order: 2
 type: "troubleshooting"
+summary: ["[TODO] 현상 → 원인 → 조치 → 결과 한 줄 요약"]
 ---
 
 ## 현상

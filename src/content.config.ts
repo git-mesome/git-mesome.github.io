@@ -11,6 +11,7 @@ const portfolio = defineCollection({
     techStack: z.array(z.string()),
     order: z.number(),
     type: z.enum(["project", "troubleshooting"]),
+    summary: z.array(z.string()).optional(),
   }),
 });
 

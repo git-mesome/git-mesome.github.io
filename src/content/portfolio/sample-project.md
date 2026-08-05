@@ -5,6 +5,7 @@ role: "[TODO] 역할"
 techStack: ["[TODO]"]
 order: 1
 type: "project"
+summary: ["[TODO] 정량적 성과 (예: 응답속도 40% 개선)"]
 ---
 
 ## 배경

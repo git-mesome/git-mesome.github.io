@@ -26,6 +26,7 @@ export interface Paper {
   title: string;
   venue: string;
   url?: string;
+  highlights?: string[];
 }
 
 export interface Education {
@@ -105,6 +106,11 @@ export const education: Education[] = [
       {
         title: "산업용 IoT 환경에서의 실시간 모니터링을 위한 반응형 스트리밍 기반 프리로딩 구조",
         venue: "한국정보통신학회논문지 (2025.09) · KCI 등재",
+        url: "/portfolio/rt-rss",
+        highlights: [
+          "반복 구간 탐색 시 서버 왕복이 매번 발생하는 병목을 SSE+프리로딩으로 제거, 요청 6회→1회·응답시간 75.7% 개선(32.4→7.9ms)",
+          "Backpressure+CQRS(PostgreSQL/Redis)로 스트리밍 파이프라인 설계, 동시 100명·5분/10명·1시간 조건에서 누락률 0% 검증(동기식 대비 0.03~0.06% 누락)",
+        ],
       },
       {
         title: "RFID 기반 키 관리 애플리케이션을 통한 강의실 자원 최적화 시스템 설계",
@@ -138,6 +144,6 @@ export const awards: Award[] = [
 ];
 
 export const certificates: Certificate[] = [
-  { name: "SQL 개발자", date: "2024.06" },
+  { name: "SQLD", date: "2024.06" },
   { name: "General English Course (University of Leeds)", date: "2022.07" },
 ];

@@ -1,29 +1,13 @@
 ---
 import { getCollection } from "astro:content";
 import { basicInfo } from "../data/resume.ts";
+import { groupPortfolioEntries } from "../lib/portfolioGroups.ts";
 
 const currentPath = Astro.url.pathname;
 const isPortfolioActive = currentPath.startsWith("/portfolio");
 
 const portfolioEntries = await getCollection("portfolio");
-
-// company가 없는 항목은 그룹 라벨 없이 Portfolio 바로 아래 노출
-const ungroupedItems = portfolioEntries
-  .filter((entry) => !entry.data.company)
-  .sort((a, b) => a.data.order - b.data.order);
-const ungroupedProjects = ungroupedItems.filter((item) => item.data.type === "project");
-const ungroupedTroubleshooting = ungroupedItems.filter((item) => item.data.type === "troubleshooting");
-
-const portfolioGroups = new Map<string, typeof portfolioEntries>();
-for (const entry of portfolioEntries) {
-  if (!entry.data.company) continue;
-  const list = portfolioGroups.get(entry.data.company) ?? [];
-  list.push(entry);
-  portfolioGroups.set(entry.data.company, list);
-}
-for (const list of portfolioGroups.values()) {
-  list.sort((a, b) => a.data.order - b.data.order);
-}
+const portfolioGroups = groupPortfolioEntries(portfolioEntries);
 
 const MOON_ICON =
   '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
@@ -59,76 +43,41 @@ const BLOG_URL = "https://medium.com/@minseo-kim";
                 </a>
               </summary>
               <div class="tree">
-                {ungroupedItems.length > 0 && (
-                  <div class="company-group">
-                    <ul>
-                      {ungroupedProjects.map((item) => {
-                        const href = `/portfolio/${item.id}`;
-                        const isActive = currentPath === href;
-                        return (
-                          <li>
-                            <a href={href} aria-current={isActive ? "page" : undefined}>{item.data.title}</a>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                    {ungroupedTroubleshooting.length > 0 && (
-                      <>
-                        <p class="section-label">Troubleshooting</p>
-                        <ul>
-                          {ungroupedTroubleshooting.map((item) => {
-                            const href = `/portfolio/${item.id}`;
-                            const isActive = currentPath === href;
-                            return (
-                              <li>
-                                <a href={href} aria-current={isActive ? "page" : undefined}>{item.data.title}</a>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </>
-                    )}
-                  </div>
-                )}
                 {
-                  [...portfolioGroups.entries()].map(([company, items]) => {
-                    const projects = items.filter((item) => item.data.type === "project");
-                    const troubleshooting = items.filter((item) => item.data.type === "troubleshooting");
-                    return (
-                      <div class="company-group">
-                        <p class="company-name">{company}</p>
-                        <ul>
-                          {projects.map((item) => {
-                            const href = `/portfolio/${item.id}`;
-                            const isActive = currentPath === href;
-                            return (
-                              <li>
-                                <a href={href} aria-current={isActive ? "page" : undefined}>{item.data.title}</a>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                        {troubleshooting.length > 0 && (
-                          <>
-                            <p class="section-label">Troubleshooting</p>
-                            <ul>
-                              {troubleshooting.map((item) => {
-                                const href = `/portfolio/${item.id}`;
-                                const isActive = currentPath === href;
-                                return (
-                                  <li>
-                                    <a href={href} aria-current={isActive ? "page" : undefined}>
-                                      {item.data.title}
-                                    </a>
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })
+                  portfolioGroups.map((group) => (
+                    <div class="company-group">
+                      {group.company && <p class="company-name">{group.company}</p>}
+                      <ul>
+                        {group.projects.map((item) => {
+                          const href = `/portfolio/${item.id}`;
+                          const isActive = currentPath === href;
+                          return (
+                            <li>
+                              <a href={href} aria-current={isActive ? "page" : undefined}>{item.data.title}</a>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      {group.troubleshooting.length > 0 && (
+                        <>
+                          <p class="section-label">Troubleshooting</p>
+                          <ul>
+                            {group.troubleshooting.map((item) => {
+                              const href = `/portfolio/${item.id}`;
+                              const isActive = currentPath === href;
+                              return (
+                                <li>
+                                  <a href={href} aria-current={isActive ? "page" : undefined}>
+                                    {item.data.title}
+                                  </a>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </>
+                      )}
+                    </div>
+                  ))
                 }
               </div>
             </details>

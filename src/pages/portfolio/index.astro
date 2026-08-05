@@ -1,15 +1,158 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import { groupPortfolioEntries } from "../../lib/portfolioGroups.ts";
+
+const portfolioEntries = await getCollection("portfolio");
+const groups = groupPortfolioEntries(portfolioEntries);
 ---
 
 <Layout title="Portfolio" description="회사별 프로젝트 및 Troubleshooting 사례">
   <h1>Portfolio</h1>
-  <p class="hint">왼쪽 메뉴(모바일에서는 상단 "메뉴")에서 프로젝트를 선택하세요.</p>
+
+  {
+    groups.map((group) => (
+      <section class="company-section">
+        {group.company && <h2>{group.company}</h2>}
+
+        <ul class="entry-list">
+          {group.projects.map((item) => (
+            <li>
+              <div class="entry-head">
+                <a class="entry-title" href={`/portfolio/${item.id}`}>
+                  {item.data.title}
+                </a>
+                <span class="tech-line">{item.data.techStack.join(" · ")}</span>
+                <a class="arrow" href={`/portfolio/${item.id}`} aria-label={`${item.data.title} 자세히 보기`}>
+                  →
+                </a>
+              </div>
+              {item.data.summary && item.data.summary.length > 0 && (
+                <ul class="highlight-list">
+                  {item.data.summary.map((line) => <li>{line}</li>)}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        {group.troubleshooting.length > 0 && (
+          <>
+            <p class="section-label">Troubleshooting</p>
+            <ul class="entry-list">
+              {group.troubleshooting.map((item) => (
+                <li>
+                  <div class="entry-head">
+                    <a class="entry-title" href={`/portfolio/${item.id}`}>
+                      {item.data.title}
+                    </a>
+                    <a class="arrow" href={`/portfolio/${item.id}`} aria-label={`${item.data.title} 자세히 보기`}>
+                      →
+                    </a>
+                  </div>
+                  {item.data.summary && item.data.summary.length > 0 && (
+                    <p class="ts-summary">{item.data.summary.join(" ")}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
+    ))
+  }
 </Layout>
 
 <style>
-  .hint {
+  h1 {
+    margin-block-end: 2rem;
+  }
+
+  .company-section {
+    margin-block-end: 3rem;
+  }
+
+  .company-section h2 {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.4rem;
+    margin-block-end: 1.25rem;
+  }
+
+  .entry-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .entry-list > li {
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+
+  .entry-list > li:first-child {
+    padding-block-start: 0;
+  }
+
+  .entry-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .entry-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  .entry-title:hover {
+    color: var(--color-link-hover);
+  }
+
+  .tech-line {
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+  }
+
+  .arrow {
+    margin-left: auto;
     color: var(--color-muted);
-    font-size: 15px;
+    text-decoration: none;
+  }
+
+  .arrow:hover {
+    color: var(--color-link-hover);
+  }
+
+  .highlight-list {
+    list-style: disc;
+    padding-left: 1.1rem;
+    margin: 0.6rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 14px;
+    color: var(--color-fg);
+  }
+
+  .ts-summary {
+    margin: 0.5rem 0 0;
+    font-size: 14px;
+    color: var(--color-muted);
+  }
+
+  .section-label {
+    margin: 1.5rem 0 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--color-border);
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 </style>

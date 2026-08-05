@@ -95,8 +95,13 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
               <ul class="highlight-list">
                 {edu.papers.map((paper) => (
                   <li>
-                    {paper.title}
+                    {paper.url ? <a href={paper.url}>{paper.title}</a> : paper.title}
                     <span class="paper-venue"> · {paper.venue}</span>
+                    {paper.highlights && paper.highlights.length > 0 && (
+                      <ul class="highlight-list paper-highlight-list">
+                        {paper.highlights.map((highlight) => <li>{highlight}</li>)}
+                      </ul>
+                    )}
                   </li>
                 ))}
               </ul>
