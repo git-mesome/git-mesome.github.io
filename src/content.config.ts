@@ -5,7 +5,7 @@ const portfolio = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/portfolio" }),
   schema: z.object({
     title: z.string(),
-    company: z.string(),
+    company: z.string().optional(),
     period: z.string(),
     role: z.string(),
     techStack: z.array(z.string()),
@@ -22,6 +22,8 @@ const books = defineCollection({
     readDate: z.coerce.date(),
     rating: z.number().min(1).max(5).optional(),
     cover: z.string().optional(),
+    featured: z.boolean().optional().default(false),
+    blurb: z.string().optional(),
   }),
 });
 

@@ -1,6 +1,5 @@
 ---
 title: "[TODO] 문제해결 사례명"
-company: "[TODO] 회사명"
 period: "[TODO] 2021.04"
 role: "[TODO] 역할"
 techStack: ["[TODO]"]

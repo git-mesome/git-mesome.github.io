@@ -1,32 +1,71 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { basicInfo, careers, skills, education, certificates } from "../data/resume.ts";
+import { basicInfo, resumeIntro, careers, skills, education, awards, certificates } from "../data/resume.ts";
+
+const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g, "") ?? "";
 ---
 
-<Layout title="Resume" description={basicInfo.tagline}>
+<Layout title="Resume" description={introDescription}>
   <section class="hero">
-    <h1>{basicInfo.name}</h1>
-    <p class="tagline">{basicInfo.tagline}</p>
+    <h1>{resumeIntro.headline}</h1>
     <ul class="contact">
-      <li><a href={`mailto:${basicInfo.email}`}>{basicInfo.email}</a></li>
-      <li><a href={basicInfo.github}>GitHub</a></li>
-      <li><a href={basicInfo.linkedin}>LinkedIn</a></li>
+      <li>
+        <a
+          href={basicInfo.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+          class="icon-box icon-github"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+          </svg>
+        </a>
+      </li>
+      <li>
+        <a
+          href={basicInfo.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
+          class="icon-box icon-linkedin"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 16 16" fill="#0A66C2">
+            <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
+          </svg>
+        </a>
+      </li>
+      <li>
+        <a href={`mailto:${basicInfo.email}`} class="mail-link">
+          <span class="icon-box icon-mail">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="11" viewBox="0 0 24 18" fill="#EA4335">
+              <path d="M24 .5v17c0 .276-.224.5-.5.5H20V7.225L12 12.5 4 7.225V18H.5a.5.5 0 0 1-.5-.5V.5C0 .107.37-.164.724.077L12 7.5 23.276.077C23.63-.164 24 .107 24 .5z" />
+            </svg>
+          </span>
+          <span class="mail-text">{basicInfo.email}</span>
+        </a>
+      </li>
+      <li class="phone">{basicInfo.phone}</li>
     </ul>
+    {resumeIntro.paragraphs.map((block) => <p class="tagline" set:html={block.join("<br />")} />)}
   </section>
 
   <section>
-    <h2>경력</h2>
-    <ul class="career-list">
+    <h2>Career</h2>
+    <ul class="entry-list">
       {
         careers.map((career) => (
           <li>
-            <div class="career-head">
+            <div class="entry-head">
               <strong>{career.company}</strong>
               <span class="period">{career.period}</span>
             </div>
-            <div class="career-sub">
+            <div class="entry-sub">
               {career.role} · {career.team}
             </div>
+            <ul class="highlight-list">
+              {career.highlights.map((highlight) => <li>{highlight}</li>)}
+            </ul>
           </li>
         ))
       }
@@ -34,23 +73,34 @@ import { basicInfo, careers, skills, education, certificates } from "../data/res
   </section>
 
   <section>
-    <h2>기술 스택</h2>
+    <h2>Skills</h2>
     <ul class="skill-list">
       {skills.map((skill) => <li>{skill}</li>)}
     </ul>
   </section>
 
   <section>
-    <h2>학력</h2>
-    <ul class="career-list">
+    <h2>Education</h2>
+    <ul class="edu-list">
       {
         education.map((edu) => (
           <li>
-            <div class="career-head">
-              <strong>{edu.school}</strong>
-              <span class="period">{edu.period}</span>
+            <div class="edu-row">
+              <span>
+                <strong>{edu.school}</strong> <span class="edu-degree">{edu.degree}</span>
+              </span>
+              <time class="date">{edu.period}</time>
             </div>
-            <div class="career-sub">{edu.degree}</div>
+            {edu.papers && edu.papers.length > 0 && (
+              <ul class="highlight-list">
+                {edu.papers.map((paper) => (
+                  <li>
+                    {paper.title}
+                    <span class="paper-venue"> · {paper.venue}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))
       }
@@ -58,20 +108,33 @@ import { basicInfo, careers, skills, education, certificates } from "../data/res
   </section>
 
   <section>
-    <h2>자격증</h2>
-    <ul class="career-list">
+    <h2>Awards</h2>
+    <ul class="entry-list awards-list">
       {
-        certificates.map((cert) => (
+        awards.map((award) => (
           <li>
-            <div class="career-head">
-              <strong>{cert.name}</strong>
-              <span class="period">{cert.date}</span>
+            <div class="entry-head">
+              <span class="award-name">{award.name}</span>
+              <span class="period">{award.date}</span>
             </div>
-            <div class="career-sub">{cert.issuer}</div>
           </li>
         ))
       }
     </ul>
+  </section>
+
+  <section>
+    <h2>Certificates</h2>
+    <p class="cert-line">
+      {
+        certificates.map((cert, index) => (
+          <>
+            {index > 0 && <span class="cert-sep">·</span>}
+            <span class="cert-name">{cert.name}</span> <time class="date cert-date">{cert.date}</time>
+          </>
+        ))
+      }
+    </p>
   </section>
 </Layout>
 
@@ -86,17 +149,128 @@ import { basicInfo, careers, skills, education, certificates } from "../data/res
   }
 
   .tagline {
-    color: var(--color-muted);
+    color: var(--color-fg);
+    font-size: 15px;
+    line-height: 1.8;
   }
 
   .contact {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.6rem;
     list-style: none;
     padding: 0;
+    font-size: 14px;
   }
 
-  .career-list {
+  .icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-muted);
+    transition:
+      border-color 0.15s,
+      color 0.15s;
+  }
+
+  a.icon-github:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  a.icon-linkedin:hover {
+    border-color: #0a66c2;
+  }
+
+  .mail-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-fg);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .mail-link:hover .icon-mail {
+    border-color: #ea4335;
+  }
+
+  .mail-text {
+    transition: color 0.15s;
+  }
+
+  .mail-link:hover .mail-text {
+    color: #ea4335;
+  }
+
+  .phone {
+    color: var(--color-muted);
+  }
+
+  .entry-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .awards-list {
+    gap: 0.4rem;
+  }
+
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .entry-head strong {
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .award-name {
+    font-size: 14.5px;
+  }
+
+  .period {
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .entry-sub {
+    color: var(--color-muted);
+    font-size: 14px;
+  }
+
+  .highlight-list {
+    list-style: disc;
+    padding-left: 1.1rem;
+    margin: 0.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 14px;
+  }
+
+  .paper-venue {
+    color: var(--color-muted);
+  }
+
+  .date {
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .edu-list {
     list-style: none;
     padding: 0;
     display: flex;
@@ -104,15 +278,38 @@ import { basicInfo, careers, skills, education, certificates } from "../data/res
     gap: 1rem;
   }
 
-  .career-head {
+  .edu-row {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
     gap: 1rem;
+    font-size: 14.5px;
   }
 
-  .period,
-  .career-sub {
+  .edu-row strong {
+    font-weight: 600;
+  }
+
+  .edu-degree {
     color: var(--color-muted);
+    margin-left: 0.4rem;
+  }
+
+  .cert-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-size: 14.5px;
+  }
+
+  .cert-name {
+    font-weight: 500;
+  }
+
+  .cert-sep {
+    color: var(--color-muted);
+    margin: 0 0.4rem;
   }
 
   .skill-list {
@@ -127,6 +324,83 @@ import { basicInfo, careers, skills, education, certificates } from "../data/res
     border: 1px solid var(--color-border);
     border-radius: 999px;
     padding: 0.25rem 0.75rem;
-    font-size: 0.9rem;
+    font-size: 13px;
+  }
+
+  @media print {
+    section {
+      margin-block-end: 0.6rem !important;
+    }
+
+    h2 {
+      padding-bottom: 0.1rem !important;
+      margin-block-end: 0.3rem !important;
+    }
+
+    .hero {
+      margin-block-end: 0.3rem !important;
+    }
+
+    .tagline {
+      font-size: 12.5px !important;
+      line-height: 1.4 !important;
+      margin: 0.2rem 0 !important;
+    }
+
+    .contact {
+      font-size: 12px !important;
+      margin: 0.3rem 0 !important;
+    }
+
+    .icon-box {
+      width: 18px !important;
+      height: 18px !important;
+    }
+
+    .entry-list {
+      gap: 0.25rem !important;
+    }
+
+    .entry-head strong {
+      font-size: 13px !important;
+    }
+
+    .entry-sub {
+      font-size: 12px !important;
+    }
+
+    .period,
+    .date {
+      font-size: 11px !important;
+    }
+
+    .edu-list {
+      gap: 0.3rem !important;
+    }
+
+    .edu-row {
+      font-size: 12px !important;
+    }
+
+    .highlight-list {
+      gap: 0.1rem !important;
+      margin-top: 0.15rem !important;
+      font-size: 11.5px !important;
+    }
+
+    .cert-line,
+    .award-name {
+      font-size: 12px !important;
+    }
+
+    .skill-list li {
+      font-size: 11px !important;
+      padding: 0.1rem 0.5rem !important;
+    }
+
+    .entry-list li,
+    .edu-list li {
+      break-inside: avoid;
+    }
   }
 </style>

@@ -1,8 +1,15 @@
 ---
-import PortfolioLayout from "../../layouts/PortfolioLayout.astro";
+import Layout from "../../layouts/Layout.astro";
 ---
 
-<PortfolioLayout title="Portfolio" description="회사별 프로젝트 및 Troubleshooting 사례">
+<Layout title="Portfolio" description="회사별 프로젝트 및 Troubleshooting 사례">
   <h1>Portfolio</h1>
-  <p>왼쪽 메뉴(모바일에서는 상단 "메뉴")에서 프로젝트를 선택하세요.</p>
-</PortfolioLayout>
+  <p class="hint">왼쪽 메뉴(모바일에서는 상단 "메뉴")에서 프로젝트를 선택하세요.</p>
+</Layout>
+
+<style>
+  .hint {
+    color: var(--color-muted);
+    font-size: 15px;
+  }
+</style>

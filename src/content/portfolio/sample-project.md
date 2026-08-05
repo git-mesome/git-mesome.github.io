@@ -1,6 +1,5 @@
 ---
 title: "[TODO] 프로젝트명"
-company: "[TODO] 회사명"
 period: "[TODO] 2020.01 - 2021.03"
 role: "[TODO] 역할"
 techStack: ["[TODO]"]

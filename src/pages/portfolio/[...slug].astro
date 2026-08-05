@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
-import PortfolioLayout from "../../layouts/PortfolioLayout.astro";
+import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
   const entries = await getCollection("portfolio");
@@ -12,12 +12,15 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const meta = entry.data.company
+  ? `${entry.data.company} · ${entry.data.period}`
+  : entry.data.period;
 ---
 
-<PortfolioLayout title={entry.data.title} description={`${entry.data.company} · ${entry.data.role}`}>
+<Layout title={entry.data.title} description={`${meta} · ${entry.data.role}`}>
   <article>
     <header class="entry-header">
-      <p class="meta">{entry.data.company} · {entry.data.period}</p>
+      <p class="meta">{meta}</p>
       <h1>{entry.data.title}</h1>
       <p class="role">{entry.data.role}</p>
       <ul class="tech-stack">
@@ -28,7 +31,7 @@ const { Content } = await render(entry);
       <Content />
     </div>
   </article>
-</PortfolioLayout>
+</Layout>
 
 <style>
   .entry-header {
@@ -37,9 +40,15 @@ const { Content } = await render(entry);
     padding-bottom: 1.5rem;
   }
 
-  .meta,
+  .meta {
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
   .role {
     color: var(--color-muted);
+    font-size: 14px;
   }
 
   .tech-stack {
@@ -55,7 +64,7 @@ const { Content } = await render(entry);
     border: 1px solid var(--color-border);
     border-radius: 999px;
     padding: 0.25rem 0.75rem;
-    font-size: 0.85rem;
+    font-size: 13px;
   }
 
   .prose :global(h2) {

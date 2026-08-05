@@ -1,5 +1,5 @@
 ---
-import Header from "../components/Header.astro";
+import Sidebar from "../components/Sidebar.astro";
 import "../styles/global.css";
 
 interface Props {
@@ -8,9 +8,10 @@ interface Props {
   ogImage?: string;
 }
 
-const { title, description = "이민서의 이력서·포트폴리오", ogImage } = Astro.props;
+const { description = "김민서의 이력서·포트폴리오", ogImage } = Astro.props;
 
-const pageTitle = title ? `${title} · mesome` : "mesome";
+// 브라우저 탭 제목은 페이지 상관없이 사이트 전체에서 통일
+const pageTitle = "김민서 : 항상 건강하세요.";
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
 ---
@@ -38,18 +39,60 @@ const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
     {ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
 
     <meta name="generator" content={Astro.generator} />
+
+    <script is:inline>
+      (function () {
+        var theme = localStorage.getItem("theme");
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.setAttribute("data-theme", theme);
+        }
+      })();
+    </script>
   </head>
   <body>
-    <Header />
-    <main class="container">
-      <slot />
-    </main>
+    <div class="page">
+      <Sidebar />
+      <main>
+        <slot />
+      </main>
+    </div>
   </body>
 </html>
 
 <style>
+  .page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
   main {
-    padding-block: 2rem;
-    min-height: calc(100vh - 6rem);
+    flex: 1;
+    padding: 40px 24px;
+    max-width: 1280px;
+  }
+
+  @media (min-width: 768px) {
+    .page {
+      flex-direction: row;
+      max-width: 1560px;
+      margin: 0 auto;
+    }
+
+    main {
+      padding: 64px 48px 64px 56px;
+    }
+  }
+
+  @media print {
+    .page {
+      max-width: none !important;
+      margin: 0 !important;
+    }
+
+    main {
+      padding: 0 !important;
+      max-width: none !important;
+    }
   }
 </style>
