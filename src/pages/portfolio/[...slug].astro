@@ -1,0 +1,66 @@
+---
+import { getCollection, render } from "astro:content";
+import PortfolioLayout from "../../layouts/PortfolioLayout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("portfolio");
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<PortfolioLayout title={entry.data.title} description={`${entry.data.company} · ${entry.data.role}`}>
+  <article>
+    <header class="entry-header">
+      <p class="meta">{entry.data.company} · {entry.data.period}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="role">{entry.data.role}</p>
+      <ul class="tech-stack">
+        {entry.data.techStack.map((tech) => <li>{tech}</li>)}
+      </ul>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</PortfolioLayout>
+
+<style>
+  .entry-header {
+    margin-block-end: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1.5rem;
+  }
+
+  .meta,
+  .role {
+    color: var(--color-muted);
+  }
+
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+  }
+
+  .tech-stack li {
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .prose :global(h2) {
+    margin-block-start: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.4rem;
+  }
+</style>

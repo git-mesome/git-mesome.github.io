@@ -1,0 +1,132 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { basicInfo, careers, skills, education, certificates } from "../data/resume.ts";
+---
+
+<Layout title="Resume" description={basicInfo.tagline}>
+  <section class="hero">
+    <h1>{basicInfo.name}</h1>
+    <p class="tagline">{basicInfo.tagline}</p>
+    <ul class="contact">
+      <li><a href={`mailto:${basicInfo.email}`}>{basicInfo.email}</a></li>
+      <li><a href={basicInfo.github}>GitHub</a></li>
+      <li><a href={basicInfo.linkedin}>LinkedIn</a></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>경력</h2>
+    <ul class="career-list">
+      {
+        careers.map((career) => (
+          <li>
+            <div class="career-head">
+              <strong>{career.company}</strong>
+              <span class="period">{career.period}</span>
+            </div>
+            <div class="career-sub">
+              {career.role} · {career.team}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section>
+    <h2>기술 스택</h2>
+    <ul class="skill-list">
+      {skills.map((skill) => <li>{skill}</li>)}
+    </ul>
+  </section>
+
+  <section>
+    <h2>학력</h2>
+    <ul class="career-list">
+      {
+        education.map((edu) => (
+          <li>
+            <div class="career-head">
+              <strong>{edu.school}</strong>
+              <span class="period">{edu.period}</span>
+            </div>
+            <div class="career-sub">{edu.degree}</div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section>
+    <h2>자격증</h2>
+    <ul class="career-list">
+      {
+        certificates.map((cert) => (
+          <li>
+            <div class="career-head">
+              <strong>{cert.name}</strong>
+              <span class="period">{cert.date}</span>
+            </div>
+            <div class="career-sub">{cert.issuer}</div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  section {
+    margin-block-end: 2.5rem;
+  }
+
+  h2 {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.4rem;
+  }
+
+  .tagline {
+    color: var(--color-muted);
+  }
+
+  .contact {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .career-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .career-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .period,
+  .career-sub {
+    color: var(--color-muted);
+  }
+
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .skill-list li {
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.9rem;
+  }
+</style>

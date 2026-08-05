@@ -1,0 +1,97 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entries: CollectionEntry<"portfolio">[];
+}
+
+const { entries } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const groups = new Map<string, CollectionEntry<"portfolio">[]>();
+for (const entry of entries) {
+  const list = groups.get(entry.data.company) ?? [];
+  list.push(entry);
+  groups.set(entry.data.company, list);
+}
+for (const list of groups.values()) {
+  list.sort((a, b) => a.data.order - b.data.order);
+}
+---
+
+<nav class="portfolio-nav" aria-label="포트폴리오 메뉴">
+  <details class="mobile-toggle">
+    <summary>메뉴</summary>
+    <div class="tree">
+      {
+        [...groups.entries()].map(([company, items]) => (
+          <div class="company-group">
+            <h3>{company}</h3>
+            <ul>
+              {items.map((item) => {
+                const href = `/portfolio/${item.id}`;
+                const isActive = currentPath === href;
+                return (
+                  <li>
+                    <a href={href} aria-current={isActive ? "page" : undefined}>
+                      {item.data.type === "troubleshooting" ? "🔧 " : ""}
+                      {item.data.title}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </details>
+</nav>
+
+<style>
+  .portfolio-nav summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0.5rem 0;
+  }
+
+  .company-group {
+    margin-block-end: 1.5rem;
+  }
+
+  .company-group h3 {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-block-end: 0.5rem;
+  }
+
+  .company-group ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .company-group a {
+    color: var(--color-fg);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  .company-group a[aria-current="page"] {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  @media (min-width: 768px) {
+    .portfolio-nav summary {
+      display: none;
+    }
+
+    .portfolio-nav .tree {
+      display: block !important;
+    }
+  }
+</style>

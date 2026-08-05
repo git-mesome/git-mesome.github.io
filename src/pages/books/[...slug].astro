@@ -1,0 +1,64 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const books = await getCollection("books");
+  return books.map((book) => ({
+    params: { slug: book.id },
+    props: { book },
+  }));
+}
+
+const { book } = Astro.props;
+const { Content } = await render(book);
+const formattedDate = book.data.readDate.toLocaleDateString("ko-KR", {
+  year: "numeric",
+  month: "long",
+});
+---
+
+<Layout title={book.data.title} description={`${book.data.title} · ${book.data.author}`}>
+  <article>
+    <header class="book-header">
+      {book.data.cover && <img src={book.data.cover} alt={`${book.data.title} 표지`} />}
+      <div>
+        <h1>{book.data.title}</h1>
+        <p class="author">{book.data.author}</p>
+        <p class="meta">{formattedDate}</p>
+        {book.data.rating && (
+          <p class="rating">{"★".repeat(book.data.rating)}{"☆".repeat(5 - book.data.rating)}</p>
+        )}
+      </div>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .book-header {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-block-end: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1.5rem;
+  }
+
+  .book-header img {
+    width: 140px;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+
+  .author,
+  .meta,
+  .rating {
+    color: var(--color-muted);
+    margin: 0.2rem 0;
+  }
+</style>

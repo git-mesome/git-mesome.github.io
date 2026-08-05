@@ -1,0 +1,61 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const books = (await getCollection("books")).sort(
+  (a, b) => b.data.readDate.valueOf() - a.data.readDate.valueOf()
+);
+---
+
+<Layout title="Books" description="읽은 책 목록과 짧은 리뷰">
+  <h1>Books</h1>
+  <ul class="book-list">
+    {
+      books.map((book) => (
+        <li>
+          <a href={`/books/${book.id}`} class="book-card">
+            {book.data.cover && <img src={book.data.cover} alt={`${book.data.title} 표지`} />}
+            <div>
+              <strong>{book.data.title}</strong>
+              <p class="author">{book.data.author}</p>
+              {book.data.rating && (
+                <p class="rating">{"★".repeat(book.data.rating)}{"☆".repeat(5 - book.data.rating)}</p>
+              )}
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>
+
+<style>
+  .book-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .book-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  .book-card img {
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+
+  .author,
+  .rating {
+    color: var(--color-muted);
+    margin: 0;
+  }
+</style>
