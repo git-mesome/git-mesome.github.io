@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1140 460" font-family="ui-sans-serif, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif">
+  <defs>
+    <marker id="arrow4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+    <filter id="shadow4" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- edges -->
+  <path d="M260,210 C 330,210 330,85 400,85" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow4)"/>
+  <path d="M260,255 C 330,255 330,320 410,320" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow4)"/>
+  <path d="M590,320 C 680,320 680,215 800,215" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow4)"/>
+  <path d="M590,320 C 680,320 680,375 800,375" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow4)"/>
+
+  <!-- edge labels -->
+  <g>
+    <rect x="255" y="122" width="150" height="28" rx="14" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="330" y="141" text-anchor="middle" font-size="12" fill="#3c4a63">트랜잭션 밖으로 분리</text>
+  </g>
+  <g>
+    <rect x="270" y="287" width="120" height="28" rx="14" fill="#fff3db" stroke="#b3720b" stroke-width="1.5"/>
+    <text x="330" y="306" text-anchor="middle" font-size="12" fill="#4a3300">실패 발생 시</text>
+  </g>
+  <g>
+    <rect x="615" y="235" width="170" height="28" rx="14" fill="#e6f7ee" stroke="#189050" stroke-width="1.5"/>
+    <text x="700" y="254" text-anchor="middle" font-size="12" fill="#0f3d22">예: CB OPEN, 멱등 작업</text>
+  </g>
+  <g>
+    <rect x="600" y="395" width="200" height="28" rx="14" fill="#fff3db" stroke="#b3720b" stroke-width="1.5"/>
+    <text x="700" y="414" text-anchor="middle" font-size="12" fill="#4a3300">아니오: PG 처리 여부 불확실</text>
+  </g>
+
+  <!-- A -->
+  <g filter="url(#shadow4)">
+    <rect x="40" y="190" width="220" height="80" rx="10" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="150" y="223" text-anchor="middle" font-size="14" fill="#152238" font-weight="600">외부 호출</text>
+    <text x="150" y="245" text-anchor="middle" font-size="12.5" fill="#3c4a63">(PG·티켓팅·예약취소)</text>
+  </g>
+
+  <!-- B -->
+  <g filter="url(#shadow4)">
+    <rect x="400" y="50" width="260" height="70" rx="10" fill="#e6f7ee" stroke="#189050" stroke-width="1.5"/>
+    <text x="530" y="79" text-anchor="middle" font-size="13.5" fill="#0f3d22" font-weight="600">DB 작업은</text>
+    <text x="530" y="99" text-anchor="middle" font-size="13" fill="#276b45">최소 범위 트랜잭션</text>
+  </g>
+
+  <!-- C: decision diamond -->
+  <g filter="url(#shadow4)">
+    <polygon points="500,260 592,320 500,380 408,320" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="500" y="315" text-anchor="middle" font-size="12.5" fill="#152238" font-weight="600">확정 가능한</text>
+    <text x="500" y="333" text-anchor="middle" font-size="12.5" fill="#152238" font-weight="600">실패?</text>
+  </g>
+
+  <!-- D -->
+  <g filter="url(#shadow4)">
+    <rect x="800" y="180" width="300" height="70" rx="10" fill="#e6f7ee" stroke="#189050" stroke-width="1.5"/>
+    <text x="950" y="209" text-anchor="middle" font-size="13.5" fill="#0f3d22" font-weight="600">FAILED 확정</text>
+    <text x="950" y="229" text-anchor="middle" font-size="13" fill="#276b45">/ 재시도 등록</text>
+  </g>
+
+  <!-- E -->
+  <g filter="url(#shadow4)">
+    <rect x="800" y="340" width="300" height="70" rx="10" fill="#fff3db" stroke="#b3720b" stroke-width="1.5"/>
+    <text x="950" y="369" text-anchor="middle" font-size="13.5" fill="#4a3300" font-weight="600">REQUESTED 유지</text>
+    <text x="950" y="389" text-anchor="middle" font-size="13" fill="#4a3300">재조회 대상</text>
+  </g>
+</svg>

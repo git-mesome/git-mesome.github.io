@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" font-family="ui-sans-serif, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif">
+  <defs>
+    <marker id="arrow6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+    <filter id="shadow6" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- edges -->
+  <line x1="450" y1="90" x2="450" y2="122" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow6)"/>
+  <path d="M335,195 C 260,195 260,345 200,345" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow6)"/>
+  <path d="M565,195 C 640,195 640,345 700,345" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow6)"/>
+
+  <!-- edge labels -->
+  <g>
+    <rect x="118" y="240" width="230" height="48" rx="8" fill="#e6f7ee" stroke="#189050" stroke-width="1.5"/>
+    <text x="233" y="260" text-anchor="middle" font-size="12" fill="#0f3d22" font-weight="600">CircuitBreaker OPEN</text>
+    <text x="233" y="277" text-anchor="middle" font-size="11" fill="#0f3d22">(요청이 PG에 전달 안 됨)</text>
+  </g>
+  <g>
+    <rect x="545" y="240" width="210" height="48" rx="8" fill="#fff3db" stroke="#b3720b" stroke-width="1.5"/>
+    <text x="650" y="260" text-anchor="middle" font-size="12" fill="#4a3300" font-weight="600">외부 호출 실패</text>
+    <text x="650" y="277" text-anchor="middle" font-size="11" fill="#4a3300">(PG 처리 여부 불확실)</text>
+  </g>
+
+  <!-- A -->
+  <g filter="url(#shadow6)">
+    <rect x="310" y="30" width="280" height="60" rx="10" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="450" y="66" text-anchor="middle" font-size="15" fill="#152238" font-weight="600">PG 호출 실패</text>
+  </g>
+
+  <!-- B: decision diamond -->
+  <g filter="url(#shadow6)">
+    <polygon points="450,125 565,195 450,265 335,195" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="450" y="200" text-anchor="middle" font-size="13.5" fill="#152238" font-weight="600">원인이 뭔가</text>
+  </g>
+
+  <!-- C: terminal FAILED -->
+  <g filter="url(#shadow6)">
+    <rect x="40" y="345" width="320" height="70" rx="10" fill="#fdeaea" stroke="#d1362b" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="200" y="374" text-anchor="middle" font-size="14.5" fill="#4a1313" font-weight="700">FAILED 확정</text>
+    <text x="200" y="394" text-anchor="middle" font-size="13" fill="#4a1313">(예약 취소)</text>
+  </g>
+
+  <!-- D: REQUESTED 유지 -->
+  <g filter="url(#shadow6)">
+    <rect x="520" y="345" width="360" height="70" rx="10" fill="#fff3db" stroke="#b3720b" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="700" y="374" text-anchor="middle" font-size="14.5" fill="#4a3300" font-weight="700">REQUESTED 유지</text>
+    <text x="700" y="394" text-anchor="middle" font-size="13" fill="#4a3300">(재조회·재시도 대상)</text>
+  </g>
+</svg>

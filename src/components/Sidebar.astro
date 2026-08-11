@@ -29,68 +29,108 @@ const BLOG_URL = "https://medium.com/@minseo-kim";
       <nav aria-label="주 메뉴">
         <ul class="nav-list">
           <li>
-            <a href="/" aria-current={currentPath === "/" ? "page" : undefined}>
-              <span class="chevron" aria-hidden="true">›</span>
+            <a class="nav-link" href="/" aria-current={currentPath === "/" ? "page" : undefined}>
+              <span class="nav-marker" aria-hidden="true">›</span>
               Resume
             </a>
           </li>
           <li>
-            <details class="portfolio-group" open={isPortfolioActive}>
-              <summary>
-                <a href="/portfolio" aria-current={currentPath === "/portfolio" ? "page" : undefined}>
-                  <span class="chevron" aria-hidden="true">›</span>
-                  Portfolio
+            <details class="nav-tree" open={isPortfolioActive}>
+              <summary class="nav-summary">
+                <a class="nav-link" href="/portfolio" aria-current={currentPath === "/portfolio" ? "page" : undefined}>
+                  <span class="nav-marker nav-marker-toggle" aria-hidden="true">›</span>
+                  <span class="nav-summary-link">Portfolio</span>
                 </a>
               </summary>
-              <div class="tree">
+              <ul class="nav-tree-list">
                 {
-                  portfolioGroups.map((group) => (
-                    <div class="company-group">
-                      {group.company && <p class="company-name">{group.company}</p>}
-                      <ul>
+                  portfolioGroups.map((group) => {
+                    const items = (
+                      <ul class="nav-tree-items">
+                        {group.projects.length > 0 && (group.troubleshooting.length > 0 || group.practice.length > 0) && (
+                          <li class="nav-tree-label-row">
+                            <p class="nav-tree-label">기획 · 설계 판단</p>
+                          </li>
+                        )}
                         {group.projects.map((item) => {
                           const href = `/portfolio/${item.id}`;
                           const isActive = currentPath === href;
                           return (
                             <li>
-                              <a href={href} aria-current={isActive ? "page" : undefined}>{item.data.title}</a>
+                              <a class="nav-tree-item" href={href} aria-current={isActive ? "page" : undefined}>
+                                {item.data.title}
+                              </a>
                             </li>
                           );
                         })}
+                        {group.troubleshooting.length > 0 && (
+                          <li class="nav-tree-troubleshooting">
+                            <p class="nav-tree-label">트러블슈팅</p>
+                            <ul>
+                              {group.troubleshooting.map((item) => {
+                                const href = `/portfolio/${item.id}`;
+                                const isActive = currentPath === href;
+                                return (
+                                  <li>
+                                    <a class="nav-tree-item" href={href} aria-current={isActive ? "page" : undefined}>
+                                      {item.data.title}
+                                    </a>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </li>
+                        )}
+                        {group.practice.length > 0 && (
+                          <li class="nav-tree-practice">
+                            <p class="nav-tree-label">일하는 방식</p>
+                            <ul>
+                              {group.practice.map((item) => {
+                                const href = `/portfolio/${item.id}`;
+                                const isActive = currentPath === href;
+                                return (
+                                  <li>
+                                    <a class="nav-tree-item" href={href} aria-current={isActive ? "page" : undefined}>
+                                      {item.data.title}
+                                    </a>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </li>
+                        )}
                       </ul>
-                      {group.troubleshooting.length > 0 && (
-                        <>
-                          <p class="section-label">Troubleshooting</p>
-                          <ul>
-                            {group.troubleshooting.map((item) => {
-                              const href = `/portfolio/${item.id}`;
-                              const isActive = currentPath === href;
-                              return (
-                                <li>
-                                  <a href={href} aria-current={isActive ? "page" : undefined}>
-                                    {item.data.title}
-                                  </a>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </>
-                      )}
-                    </div>
-                  ))
+                    );
+
+                    return (
+                      <li>
+                        {group.company ? (
+                          <details open>
+                            <summary class="nav-tree-section">
+                              <span class="nav-tree-caret" aria-hidden="true">▾</span>
+                              {group.company}
+                            </summary>
+                            {items}
+                          </details>
+                        ) : (
+                          items
+                        )}
+                      </li>
+                    );
+                  })
                 }
-              </div>
+              </ul>
             </details>
           </li>
           <li>
-            <a href="/books" aria-current={currentPath.startsWith("/books") ? "page" : undefined}>
-              <span class="chevron" aria-hidden="true">›</span>
+            <a class="nav-link" href="/books" aria-current={currentPath.startsWith("/books") ? "page" : undefined}>
+              <span class="nav-marker" aria-hidden="true">›</span>
               Books
             </a>
           </li>
           <li>
-            <a href={BLOG_URL} target="_blank" rel="noopener noreferrer">
-              <span class="icon" aria-hidden="true" set:html={MEDIUM_ICON} />
+            <a class="nav-link nav-link-external" href={BLOG_URL} target="_blank" rel="noopener noreferrer">
+              <span class="nav-icon" aria-hidden="true" set:html={MEDIUM_ICON} />
               Blog
             </a>
           </li>
@@ -188,102 +228,180 @@ const BLOG_URL = "https://medium.com/@minseo-kim";
     gap: 0.25rem;
   }
 
-  .nav-list > li > a {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    color: var(--color-fg);
+  .nav-link {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    column-gap: 8px;
+    align-items: baseline;
+    padding: 6px 10px 6px 0;
+    color: var(--color-muted);
     text-decoration: none;
-    padding: 0.4rem 0;
-    font-weight: 400;
+    transition: color 0.15s ease;
   }
 
-  .nav-list > li > a .icon {
+  .nav-link:hover {
+    color: var(--color-fg);
+  }
+
+  .nav-link[aria-current="page"] {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .nav-summary-link,
+  .nav-summary-link:hover {
+    color: inherit;
+  }
+
+  .nav-marker {
+    color: transparent;
+    font-weight: 700;
+    transform: translateY(-1px);
+    transition: color 0.15s ease;
+  }
+
+  .nav-link:hover .nav-marker {
+    color: var(--color-subtle);
+  }
+
+  .nav-link[aria-current="page"] .nav-marker {
+    color: var(--color-accent);
+  }
+
+  .nav-marker-toggle {
+    color: var(--color-subtle);
+    transition:
+      transform 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .nav-tree[open] > summary .nav-marker-toggle {
+    transform: translateY(-1px) rotate(90deg);
+  }
+
+  .nav-icon {
     display: inline-flex;
-    color: var(--color-muted);
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    color: var(--color-subtle);
+    transform: translateY(2px);
+    transition: color 0.15s ease;
   }
 
-  .nav-list > li > a[aria-current="page"] {
-    color: var(--color-accent);
-    font-weight: 700;
+  .nav-link-external:hover .nav-icon {
+    color: var(--color-fg);
   }
 
-  .chevron {
-    color: var(--color-muted);
-    font-weight: 700;
-  }
-
-  a[aria-current="page"] .chevron {
-    color: var(--color-accent);
-  }
-
-  .portfolio-group summary {
+  .nav-tree > summary {
+    cursor: pointer;
     list-style: none;
-    padding: 0;
   }
 
-  .portfolio-group summary::-webkit-details-marker {
+  .nav-tree > summary::-webkit-details-marker {
     display: none;
   }
 
-  .portfolio-group > summary > a {
+  .nav-tree-list {
+    list-style: none;
+    margin: 4px 0 0 5px;
+    padding-left: 14px;
+    border-left: 1px solid var(--color-border);
+  }
+
+  .nav-tree-list > li + li {
+    margin-top: 4px;
+  }
+
+  .nav-tree-section {
+    cursor: pointer;
+    list-style: none;
     display: flex;
     align-items: center;
-    gap: 0.45rem;
-    color: var(--color-fg);
-    text-decoration: none;
-    padding: 0.4rem 0;
-    font-weight: 400;
-  }
-
-  .portfolio-group > summary > a[aria-current="page"] {
-    color: var(--color-accent);
-    font-weight: 700;
-  }
-
-  .tree {
-    padding-left: 0.75rem;
-    border-left: 1px solid var(--color-border);
-    margin-left: 0.25rem;
-  }
-
-  .company-group {
-    margin-block: 0.75rem;
-  }
-
-  .company-name {
+    gap: 6px;
+    padding: 4px 6px 4px 0;
     font-size: 14.5px;
     color: var(--color-muted);
-    margin: 0 0 0.35rem;
+    transition: color 0.15s ease;
   }
 
-  .company-group ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+  .nav-tree-section::-webkit-details-marker {
+    display: none;
   }
 
-  .section-label {
-    margin: 0.75rem 0 0.35rem;
-    padding-top: 0.6rem;
-    border-top: 1px dashed var(--color-border);
-    font-size: 0.7rem;
-    color: var(--color-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .company-group a {
+  .nav-tree-section:hover {
     color: var(--color-fg);
-    text-decoration: none;
-    font-size: 12px;
   }
 
-  .company-group a[aria-current="page"] {
+  .nav-tree-caret {
+    display: inline-block;
+    width: 10px;
+    font-size: 9px;
+    color: var(--color-subtle);
+    transition: transform 0.15s ease;
+  }
+
+  details:not([open]) > .nav-tree-section .nav-tree-caret {
+    transform: rotate(-90deg);
+  }
+
+  .nav-tree-items {
+    margin: 2px 0 0;
+    padding-left: 16px;
+    list-style: none;
+  }
+
+  .nav-tree-items > li + li {
+    margin-top: 1px;
+  }
+
+  .nav-tree-item {
+    display: block;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--color-subtle);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    padding: 4px 8px;
+    margin-left: -8px;
+    transition: color 0.15s ease;
+  }
+
+  .nav-tree-item:hover {
+    color: var(--color-muted);
+  }
+
+  .nav-tree-item[aria-current="page"] {
     color: var(--color-accent);
+    font-weight: 600;
+    border-left-color: var(--color-accent);
+  }
+
+  .nav-tree-label-row {
+    margin: 0;
+  }
+
+  .nav-tree-troubleshooting,
+  .nav-tree-practice {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--color-border);
+  }
+
+  .nav-tree-troubleshooting > ul,
+  .nav-tree-practice > ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .nav-tree-label {
+    margin: 0 0 3px;
+    padding-left: 0;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-subtle);
     font-weight: 600;
   }
 

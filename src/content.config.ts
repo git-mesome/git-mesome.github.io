@@ -10,7 +10,7 @@ const portfolio = defineCollection({
     role: z.string(),
     techStack: z.array(z.string()),
     order: z.number(),
-    type: z.enum(["project", "troubleshooting"]),
+    type: z.enum(["project", "troubleshooting", "practice"]),
     summary: z.array(z.string()).optional(),
   }),
 });

@@ -16,7 +16,8 @@
 - Resume: 경력/학력/자격증
 - Portfolio: 회사별 프로젝트 상세 페이지
   - 내부 이동: 좌측 사이드바로 회사 &gt; 프로젝트/Troubleshooting 트리 탐색 (모바일은 상단 드롭다운/토글로 전환)
-  - 상세 페이지 섹션 순서: 메타데이터(회사명·기간) → 배경 → 성과 → 설계 및 구현 → 운영/회고(선택)
+  - 상세 페이지 섹션 순서: 메타데이터(회사명·기간) → 배경(문제 인식) → 성과 → 설계 및 구현(판단·해결, 운영/리스크 대응·회고 포함)
+    (성과를 앞에 두는 이유: 상세페이지까지 스크롤/완독 안 하는 독자가 많아 핵심 결과를 먼저 보여주는 쪽을 택함. 운영/회고는 독립 섹션이 아니라 설계 및 구현 안에 흡수)
   - Troubleshooting: 프로젝트 단위가 아닌 개별 문제해결 사례. 같은 트리에서 프로젝트와 함께 노출
 - Books: 읽은 책 목록 + 책별 짧은 리뷰란(내 생각)
 - Blog: 블로그 연동 링크
@@ -26,7 +27,7 @@
 - Resume 데이터는 `src/data/resume.ts`로 분리한다 (짧고 구조화된 목록이라 데이터 파일이 적합). 마크업에 하드코딩하지 말 것.
 - Portfolio / Books / Blog는 Content Collections로 관리한다 (긴 서술+이미지가 들어가는 콘텐츠라 마크다운이 적합):
   - Portfolio frontmatter: `company`, `period`, `role`, `techStack`, `order`, `type`(`'project' | 'troubleshooting'`)
-  본문: 배경 / 성과 / 설계 및 구현 / 운영·회고 섹션을 마크다운으로 작성. 다이어그램은 mermaid 코드블록, 스크린샷은 이미지 삽입.
+  본문: 배경 / 성과 / 설계 및 구현(운영·회고 포함) 섹션을 마크다운으로 작성. 다이어그램은 mermaid 코드블록, 스크린샷은 이미지 삽입.
   - Blog frontmatter: `title`, `date`, `tags`, `description`
   - Books frontmatter: `title`, `author`, `readDate`, `rating`, `cover`(선택)
 - 이미지(다이어그램·스크린샷)는 `src/assets/portfolio/{company}/{project}/` 아래 저장한다. 마크다운에서 alt 텍스트 필수.

@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { basicInfo, resumeIntro, careers, skills, education, awards, certificates } from "../data/resume.ts";
+import { basicInfo, resumeIntro, projects, careers, skills, education, awards, certificates } from "../data/resume.ts";
 
 const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g, "") ?? "";
 ---
@@ -45,9 +45,45 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
           <span class="mail-text">{basicInfo.email}</span>
         </a>
       </li>
-      <li class="phone">{basicInfo.phone}</li>
     </ul>
     {resumeIntro.paragraphs.map((block) => <p class="tagline" set:html={block.join("<br />")} />)}
+  </section>
+
+  <section>
+    <header class="section-head">
+      <h2>Projects</h2>
+      <p class="section-note">
+        자세한 내용은 <a href="/portfolio/">포트폴리오</a>를 참고해 주세요.
+      </p>
+    </header>
+    <ul class="entry-list">
+      {
+        projects.map((project) => (
+          <li>
+            <div class="entry-head">
+              <div class="entry-title-group">
+                <strong>{project.url ? <a href={project.url}>{project.name}</a> : project.name}</strong>
+                <span class="entry-role">{project.role}</span>
+              </div>
+              <span class="period">{project.period}</span>
+            </div>
+            {project.summary.length > 0 && (
+              <blockquote class="summary-quote">
+                {project.summary.map((line) => <p>{line}</p>)}
+              </blockquote>
+            )}
+            <ul class="highlight-list">
+              {project.highlights.map((highlight) => (
+                <li>
+                  <span class="hl-lead">{highlight.lead}</span>
+                  {highlight.detail && <span class="hl-detail"> - {highlight.detail}</span>}
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
   <section>
@@ -57,14 +93,24 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
         careers.map((career) => (
           <li>
             <div class="entry-head">
-              <strong>{career.company}</strong>
+              <div class="entry-title-group">
+                <strong>{career.company}</strong>
+                <span class="entry-role">{career.role} · {career.team}</span>
+              </div>
               <span class="period">{career.period}</span>
             </div>
-            <div class="entry-sub">
-              {career.role} · {career.team}
-            </div>
+            {career.summary.length > 0 && (
+              <blockquote class="summary-quote">
+                {career.summary.map((line) => <p>{line}</p>)}
+              </blockquote>
+            )}
             <ul class="highlight-list">
-              {career.highlights.map((highlight) => <li>{highlight}</li>)}
+              {career.highlights.map((highlight) => (
+                <li>
+                  <span class="hl-lead">{highlight.lead}</span>
+                  {highlight.detail && <span class="hl-detail"> - {highlight.detail}</span>}
+                </li>
+              ))}
             </ul>
           </li>
         ))
@@ -153,6 +199,29 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
     padding-bottom: 0.4rem;
   }
 
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-head h2 {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0;
+  }
+
+  .section-note {
+    color: var(--color-muted);
+    font-size: 14.5px;
+    margin: 0;
+  }
+
   .tagline {
     color: var(--color-fg);
     font-size: 15px;
@@ -212,10 +281,6 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
     color: #ea4335;
   }
 
-  .phone {
-    color: var(--color-muted);
-  }
-
   .entry-list {
     list-style: none;
     padding: 0;
@@ -232,12 +297,25 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.3rem 1rem;
+  }
+
+  .entry-title-group {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.6rem;
   }
 
   .entry-head strong {
     font-size: 17px;
     font-weight: 600;
+  }
+
+  .entry-role {
+    color: var(--color-muted);
+    font-size: 14px;
   }
 
   .award-name {
@@ -248,11 +326,24 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
     color: var(--color-subtle);
     font-family: var(--font-mono);
     font-size: 13px;
+    font-variant-numeric: tabular-nums;
   }
 
-  .entry-sub {
+  .summary-quote {
+    margin: 0.6rem 0 0.75rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--color-accent);
     color: var(--color-muted);
-    font-size: 14px;
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+
+  .summary-quote p {
+    margin: 0;
+  }
+
+  .summary-quote p + p {
+    margin-top: 0.35rem;
   }
 
   .highlight-list {
@@ -261,8 +352,18 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
     margin: 0.5rem 0 0;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    font-size: 14px;
+    gap: 0.35rem;
+    font-size: 14.5px;
+    line-height: 1.75;
+  }
+
+  .hl-lead {
+    color: var(--color-fg);
+  }
+
+  .hl-detail {
+    color: var(--color-subtle);
+    font-size: 13px;
   }
 
   .paper-venue {
@@ -342,6 +443,25 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
       margin-block-end: 0.3rem !important;
     }
 
+    .section-head {
+      padding-bottom: 0.1rem !important;
+      margin-bottom: 0.3rem !important;
+    }
+
+    .section-note {
+      font-size: 11px !important;
+    }
+
+    .summary-quote {
+      margin: 0.25rem 0 0.3rem !important;
+      font-size: 11.5px !important;
+      line-height: 1.45 !important;
+    }
+
+    .summary-quote p + p {
+      margin-top: 0.15rem !important;
+    }
+
     .hero {
       margin-block-end: 0.3rem !important;
     }
@@ -370,7 +490,7 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
       font-size: 13px !important;
     }
 
-    .entry-sub {
+    .entry-role {
       font-size: 12px !important;
     }
 
@@ -391,6 +511,10 @@ const introDescription = resumeIntro.paragraphs[0]?.[0]?.replace(/<\/?strong>/g,
       gap: 0.1rem !important;
       margin-top: 0.15rem !important;
       font-size: 11.5px !important;
+    }
+
+    .hl-detail {
+      font-size: 10.5px !important;
     }
 
     .cert-line,

@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 760" font-family="ui-sans-serif, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- lines (drawn first, under boxes) -->
+  <path d="M500,88 V128" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <path d="M500,184 V224" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <!-- branches from B(500,280) down to F(180,392) / D(500,392) / G(820,392) -->
+  <path d="M500,308 V340 L180,340 V366" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <path d="M500,308 V366" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <path d="M500,308 V340 L820,340 V366" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <!-- D -> H -->
+  <path d="M500,420 V456" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <!-- H -> I / J -->
+  <path d="M500,486 V520 L300,520 V546" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <path d="M500,486 V520 L700,520 V546" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+
+  <!-- edge label pills -->
+  <g>
+    <rect x="108" y="326" width="92" height="28" rx="14" fill="#e9f0ff" stroke="#189050" stroke-width="1.5"/>
+    <text x="154" y="345" text-anchor="middle" font-size="13" fill="#0f3d22">CB OPEN</text>
+  </g>
+  <g>
+    <rect x="452" y="326" width="96" height="28" rx="14" fill="#e9f0ff" stroke="#189050" stroke-width="1.5"/>
+    <text x="500" y="345" text-anchor="middle" font-size="13" fill="#0f3d22">정상 응답</text>
+  </g>
+  <g>
+    <rect x="748" y="326" width="128" height="28" rx="14" fill="#e9f0ff" stroke="#b3720b" stroke-width="1.5"/>
+    <text x="812" y="345" text-anchor="middle" font-size="13" fill="#4a3300">외부 호출 실패</text>
+  </g>
+
+  <!-- A -->
+  <g filter="url(#shadow)">
+    <rect x="340" y="32" width="320" height="56" rx="10" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="500" y="55" text-anchor="middle" font-size="14" fill="#152238" font-weight="600">PaymentService</text>
+    <text x="500" y="75" text-anchor="middle" font-size="13" fill="#3c4a63">confirmPayment()</text>
+  </g>
+
+  <!-- R -->
+  <g filter="url(#shadow)">
+    <rect x="340" y="128" width="320" height="56" rx="10" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="500" y="151" text-anchor="middle" font-size="14" fill="#152238" font-weight="600">PG 호출 전</text>
+    <text x="500" y="171" text-anchor="middle" font-size="13" fill="#3c4a63">REQUESTED 선저장</text>
+  </g>
+
+  <!-- B -->
+  <g filter="url(#shadow)">
+    <rect x="320" y="224" width="360" height="56" rx="10" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="500" y="247" text-anchor="middle" font-size="14" fill="#152238" font-weight="600">PG confirmPayment 호출</text>
+    <text x="500" y="267" text-anchor="middle" font-size="13" fill="#3c4a63">(CircuitBreaker)</text>
+  </g>
+
+  <!-- F: terminal, CB OPEN -->
+  <g filter="url(#shadow)">
+    <rect x="40" y="366" width="220" height="54" rx="10" fill="#fdeaea" stroke="#d1362b" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="150" y="398" text-anchor="middle" font-size="14" fill="#4a1313" font-weight="600">FAILED 확정</text>
+  </g>
+
+  <!-- D: continues -->
+  <g filter="url(#shadow)">
+    <rect x="330" y="366" width="340" height="54" rx="10" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="500" y="389" text-anchor="middle" font-size="13.5" fill="#152238" font-weight="600">PaymentTransactionService</text>
+    <text x="500" y="407" text-anchor="middle" font-size="12.5" fill="#3c4a63">applyConfirmResult()</text>
+  </g>
+
+  <!-- G: terminal, 외부호출실패 -->
+  <g filter="url(#shadow)">
+    <rect x="710" y="366" width="250" height="54" rx="10" fill="#fff3db" stroke="#b3720b" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="835" y="389" text-anchor="middle" font-size="13.5" fill="#4a3300" font-weight="600">REQUESTED 유지</text>
+    <text x="835" y="407" text-anchor="middle" font-size="12" fill="#4a3300">(재조회 대상)</text>
+  </g>
+
+  <!-- H: event pill -->
+  <g filter="url(#shadow)">
+    <rect x="380" y="456" width="240" height="44" rx="22" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="500" y="483" text-anchor="middle" font-size="13.5" fill="#152238" font-weight="600">PaymentApprovedEvent</text>
+  </g>
+
+  <!-- I -->
+  <g filter="url(#shadow)">
+    <rect x="150" y="546" width="300" height="56" rx="10" fill="#e6f7ee" stroke="#189050" stroke-width="1.5"/>
+    <text x="300" y="569" text-anchor="middle" font-size="13.5" fill="#0f3d22" font-weight="600">Outbox: 티켓 발급</text>
+    <text x="300" y="588" text-anchor="middle" font-size="12" fill="#276b45">(reservationId 멱등)</text>
+  </g>
+
+  <!-- J -->
+  <g filter="url(#shadow)">
+    <rect x="550" y="546" width="300" height="56" rx="10" fill="#e6f7ee" stroke="#189050" stroke-width="1.5"/>
+    <text x="700" y="569" text-anchor="middle" font-size="13.5" fill="#0f3d22" font-weight="600">Outbox: 예약 취소</text>
+    <text x="700" y="588" text-anchor="middle" font-size="12" fill="#276b45">(idempotent DELETE)</text>
+  </g>
+
+  <!-- legend -->
+  <g transform="translate(40, 660)">
+    <rect x="0" y="0" width="920" height="72" rx="10" fill="#f6f7f9" stroke="#d7dbe3" stroke-width="1"/>
+    <circle cx="26" cy="24" r="6" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="42" y="28" font-size="12.5" fill="#3c4a63">진행 중 처리</text>
+    <circle cx="26" cy="48" r="6" fill="#e6f7ee" stroke="#189050" stroke-width="1.5"/>
+    <text x="42" y="52" font-size="12.5" fill="#3c4a63">Outbox 기록 (멱등, 재시도 대상)</text>
+    <circle cx="330" cy="24" r="6" fill="#fdeaea" stroke="#d1362b" stroke-width="1.5"/>
+    <text x="346" y="28" font-size="12.5" fill="#3c4a63">확정 종료 (재시도 없음)</text>
+    <circle cx="330" cy="48" r="6" fill="#fff3db" stroke="#b3720b" stroke-width="1.5"/>
+    <text x="346" y="52" font-size="12.5" fill="#3c4a63">불확실 상태 유지 (재조회 대상)</text>
+    <circle cx="680" cy="24" r="6" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="696" y="28" font-size="12.5" fill="#3c4a63">도메인 이벤트</text>
+  </g>
+</svg>

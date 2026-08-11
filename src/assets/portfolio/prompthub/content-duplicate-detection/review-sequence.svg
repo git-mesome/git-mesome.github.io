@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" font-family="ui-sans-serif, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif">
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <!-- lifelines -->
+  <line x1="140" y1="74" x2="140" y2="676" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="5 5"/>
+  <line x1="460" y1="74" x2="460" y2="676" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="5 5"/>
+  <line x1="800" y1="74" x2="800" y2="676" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="5 5"/>
+
+  <!-- headers -->
+  <g>
+    <rect x="40" y="20" width="200" height="54" rx="10" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="140" y="52" text-anchor="middle" font-size="14" fill="#152238" font-weight="600">product-service</text>
+  </g>
+  <g>
+    <rect x="330" y="20" width="260" height="54" rx="8" fill="#fff3db" stroke="#b3720b" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="460" y="45" text-anchor="middle" font-size="12" fill="#4a3300" font-weight="600">PRODUCT_REVIEW_REQUESTED</text>
+    <text x="460" y="62" text-anchor="middle" font-size="11" fill="#7a5a20">(Kafka topic)</text>
+  </g>
+  <g>
+    <rect x="700" y="20" width="200" height="54" rx="10" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="800" y="52" text-anchor="middle" font-size="14" fill="#152238" font-weight="600">ai-service</text>
+  </g>
+
+  <!-- self-loop P1 -->
+  <g>
+    <rect x="150" y="90" width="310" height="42" rx="8" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="164" y="107" font-size="12" fill="#3c4a63">content 정규화 해시 계산,</text>
+    <text x="164" y="124" font-size="12" fill="#3c4a63">content_hash_at 확정 (DB 트리거)</text>
+  </g>
+  <path d="M140,140 C 200,140 200,164 140,164" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+
+  <!-- self-loop P2 -->
+  <g>
+    <rect x="150" y="182" width="310" height="42" rx="8" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="164" y="199" font-size="12" fill="#3c4a63">같은 해시 가진 타 판매자 상품 중</text>
+    <text x="164" y="216" font-size="12" fill="#3c4a63">더 이른 것 조회</text>
+  </g>
+  <path d="M140,232 C 200,232 200,256 140,256" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+
+  <!-- P -> K -->
+  <g>
+    <rect x="200" y="276" width="220" height="30" rx="8" fill="#e9f0ff" stroke="#8b93a3" stroke-width="1.5"/>
+    <text x="310" y="296" text-anchor="middle" font-size="12" fill="#3c4a63">duplicateOfProductId 포함해 발행</text>
+  </g>
+  <line x1="140" y1="316" x2="460" y2="316" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <!-- K -> A -->
+  <g>
+    <rect x="560" y="330" width="140" height="30" rx="8" fill="#e9f0ff" stroke="#8b93a3" stroke-width="1.5"/>
+    <text x="630" y="350" text-anchor="middle" font-size="12" fill="#3c4a63">검수요청 전달</text>
+  </g>
+  <line x1="460" y1="370" x2="800" y2="370" stroke="#6b7280" stroke-width="2" marker-end="url(#arrow2)"/>
+
+  <!-- alt fragment -->
+  <rect x="640" y="400" width="300" height="240" rx="6" fill="none" stroke="#8b93a3" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <!-- alt tag -->
+  <polygon points="640,400 726,400 726,424 714,434 640,434" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+  <text x="654" y="422" font-size="12" fill="#152238" font-weight="700" font-style="italic">alt</text>
+  <rect x="734" y="404" width="196" height="22" rx="4" fill="#e9f0ff"/>
+  <text x="742" y="419" font-size="10.5" fill="#3c4a63" font-family="ui-monospace, 'SF Mono', Menlo, monospace">duplicateOfProductId != null</text>
+
+  <!-- loop A1 (true branch) -->
+  <g>
+    <rect x="656" y="446" width="264" height="42" rx="8" fill="#e6f7ee" stroke="#189050" stroke-width="1.5"/>
+    <text x="670" y="463" font-size="12" fill="#0f3d22">OpenAI 호출 없이 자동 반려</text>
+    <text x="670" y="480" font-size="12" fill="#0f3d22">(기존 상품과 동일 본문)</text>
+  </g>
+  <path d="M800,496 C 860,496 860,520 800,520" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+
+  <!-- divider -->
+  <line x1="640" y1="546" x2="940" y2="546" stroke="#8b93a3" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <polygon points="640,546 706,546 706,568 694,578 640,578" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+  <text x="650" y="566" font-size="12" fill="#152238" font-weight="700" font-style="italic">else</text>
+
+  <!-- loop A2 (else branch) -->
+  <g>
+    <rect x="656" y="590" width="264" height="34" rx="8" fill="#e9f0ff" stroke="#2c5cff" stroke-width="1.5"/>
+    <text x="670" y="611" font-size="12" fill="#3c4a63">기존 LLM 정책 검수 수행</text>
+  </g>
+  <path d="M800,624 C 860,624 860,648 800,648" stroke="#6b7280" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+</svg>
