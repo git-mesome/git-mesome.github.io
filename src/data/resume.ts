@@ -96,7 +96,7 @@ export const resumeIntro: ResumeIntro = {
 export const projects: Project[] = [
   {
     name: "AI Agent 마켓플레이스",
-    period: "2026.06 - 2026.07 (2개월)",
+    period: "2026.06 - 2026.07",
     role: "PO 및 백엔드 개발",
     url: "/portfolio/prompthub-auth-gateway",
     summary: [
@@ -141,7 +141,7 @@ export const projects: Project[] = [
   },
   {
     name: "공연 좌석 티켓팅 서비스 - NextFrame (WiSoft)",
-    period: "2025.05 - 2025.12 (8개월)",
+    period: "2025.05 - 2025.12",
     role: "백엔드 개발",
     url: "/portfolio/next-frame-payment",
     summary: [
@@ -178,7 +178,7 @@ export const projects: Project[] = [
 export const careers: Career[] = [
   {
     company: "주식회사 로보볼트",
-    period: "2023.06 - 2024.05 (12개월)",
+    period: "2023.06 - 2024.05",
     role: "주임",
     team: "연구개발팀",
     summary: ["AWS 인프라를 자사 온프레미스로 이전하고, 배터리 로그 데이터 적재·DB 성능 튜닝까지 연구개발팀에서 주도했습니다."],
