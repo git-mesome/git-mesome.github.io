@@ -8,13 +8,17 @@ order: 3
 type: "troubleshooting"
 summary:
   [
-    "AFTER_COMMIT 리스너가 원본 트랜잭션 커밋 이후 실행되는 특성 때문에 별도 트랜잭션 없이는 Outbox 저장 자체가 반영되지 않는 버그를 발견·수정",
+    "AFTER_COMMIT 리스너가 원본 트랜잭션 커밋 이후 실행되는 특성 때문에 별도 트랜잭션 없이는 Outbox 저장 자체가 반영되지 않는 함정을 Outbox 도입 과정에서 발견·수정",
   ]
 ---
 
 ## 현상
 
-결제 승인 후 티켓 발급·예약 상태 변경 같은 후속 작업을 Outbox 패턴으로 안전하게 재시도하도록 구현했는데, 결제 커밋 직후 Outbox 테이블에 레코드가 남아야 할 상황에서 저장 자체가 반영되지 않는 현상이 나타났습니다.
+결제 승인 시 `PaymentEventHandler`가 결제 트랜잭션 안에서 `ticketingClient.issueTicket()`을 동기 직접 호출하던 구조였습니다. 이 외부 호출을 트랜잭션 밖으로 분리하기 위해 `AFTER_COMMIT` 리스너 + Outbox 패턴으로 바꾸는 작업을 하던 중, 결제 커밋 직후 Outbox 테이블에 레코드가 남아야 할 상황에서 저장 자체가 반영되지 않는 현상을 만났습니다.
+
+## 원인 파악 과정
+
+Outbox insert 로직 자체는 정상적으로 호출되고 있었기 때문에, upsert 직후 바로 재조회해서 row 존재 여부를 확인하는 임시 로그(`log.info("AFTER UPSERT present={}", jpaTicketIssueOutboxRepository.findByReservationId(reservationId).isPresent())`)를 심어봤습니다. 재조회 결과가 매번 비어 있는 걸 확인하고, "저장 호출은 되는데 커밋이 안 되고 있다"는 방향으로 원인을 좁혔습니다.
 
 ## 원인
 

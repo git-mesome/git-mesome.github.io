@@ -182,6 +182,15 @@ const BLOG_URL = "https://medium.com/@minseo-kim";
   printButton?.addEventListener("click", () => window.print());
 
   syncButton();
+
+  document.querySelectorAll<HTMLElement>(".nav-marker-toggle").forEach((marker) => {
+    const details = marker.closest("details");
+    if (!details) return;
+    marker.addEventListener("click", (event) => {
+      event.preventDefault();
+      details.open = !details.open;
+    });
+  });
 </script>
 
 <style>
@@ -269,13 +278,13 @@ const BLOG_URL = "https://medium.com/@minseo-kim";
   }
 
   .nav-marker-toggle {
-    color: var(--color-subtle);
     transition:
       transform 0.15s ease,
       color 0.15s ease;
   }
 
   .nav-tree[open] > summary .nav-marker-toggle {
+    color: var(--color-subtle);
     transform: translateY(-1px) rotate(90deg);
   }
 

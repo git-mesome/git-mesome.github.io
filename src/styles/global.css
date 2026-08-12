@@ -212,6 +212,23 @@ img {
   margin-block: 1.5rem;
 }
 
+.prose img ~ em {
+  display: block;
+  margin-block: -1rem 1.5rem;
+  font-style: normal;
+  font-size: 13px;
+  color: var(--color-subtle);
+  text-align: center;
+}
+
+.prose p:has(img + img) + p:has(> em:only-child) {
+  margin-block-start: -1rem;
+  font-style: normal;
+  font-size: 13px;
+  color: var(--color-subtle);
+  text-align: center;
+}
+
 .prose img[alt="AI Agent 마켓플레이스 프로젝트 마스코트"] {
   float: left;
   width: 190px;

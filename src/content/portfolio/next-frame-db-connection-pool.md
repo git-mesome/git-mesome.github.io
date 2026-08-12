@@ -29,6 +29,7 @@ PG 호출을 트랜잭션 메서드 밖으로 빼는 방법을 먼저 검토했�
 "외부 호출은 트랜잭션 밖에서, DB 작업은 최소 범위 트랜잭션"을 원칙으로 세우고 `PaymentService`를 순수 오케스트레이터로 재설계했습니다. `@Transactional`을 제거하고 DB 작업은 `PaymentTransactionService`/`RefundTransactionService`로 위임했습니다.
 
 ![DB 커넥션 점유 문제 Before/After 비교 다이어그램 - Before: 트랜잭션 시작 → PG 호출(최대 8초 대기) → DB 저장 → 트랜잭션 커밋이 하나의 트랜잭션 범위에 묶여 있어 PG 응답 대기 중에도 커넥션을 점유. After: PG 호출은 트랜잭션 경계 밖에서 처리하고, PaymentTransactionService만 최소 범위 트랜잭션으로 분리](../../assets/portfolio/next-frame/payment/db-connection-pool-before-after.svg)
+*DB 커넥션 점유 Before/After - PG 호출을 트랜잭션 경계 밖으로 분리*
 
 ## 결과
 

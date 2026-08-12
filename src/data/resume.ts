@@ -26,6 +26,8 @@ export interface Project {
   url?: string;
   // 회사/프로젝트 아래 1~2문장 요약(인용구로 표시). 기존 하이라이트·포트폴리오 배경을 압축해서 쓸 것 - 새 사실을 지어내지 말 것.
   summary: string[];
+  // 인용구 아래 작은 글씨로 표시. 포트폴리오 overview 문서의 techStack과 맞출 것.
+  techStack: string[];
   highlights: Highlight[];
 }
 
@@ -82,10 +84,10 @@ export const resumeIntro: ResumeIntro = {
     ],
     [
       "혼자 잘하는 것보다 <strong>팀이 같은 정보를 보고 판단하게 만드는 데</strong> 관심이 많습니다.",
-      "프로젝트에서 PO 역할때도 팀의 우선순위와 진행 상황을 모두가 볼 수 있는 형태로 정리해, 일정 리스크를 먼저 파악할 수 있게 했습니다.",
+      "프로젝트에서 PO로서 <a href=\"/portfolio/prompthub-issue-management\">팀의 우선순위와 진행 상황을 모두가 볼 수 있는 형태로 정리해</a>, 일정 리스크를 먼저 파악할 수 있게 했습니다.",
     ],
     [
-      "AI에게 위임할 영역과 제가 직접 판단해야 할 흐름을 나누고, 계획 문서를 기준으로 AI 결과물이 요구사항을 벗어나지 않았는지 확인한 뒤 채택합니다.",
+      "<a href=\"/portfolio/prompthub-ai-collaboration\">AI에게 위임할 영역과 제가 직접 판단해야 할 흐름을 나누고</a>, 계획 문서를 기준으로 AI 결과물이 요구사항을 벗어나지 않았는지 확인한 뒤 채택합니다.",
       "구현은 맡기되 <strong>설계 판단과 책임은 제 몫으로 둡니다.</strong>",
     ],
   ],
@@ -99,6 +101,24 @@ export const projects: Project[] = [
     url: "/portfolio/prompthub-auth-gateway",
     summary: [
       "BE 5명 규모 MSA 팀 프로젝트에서 팀 리더 겸 PO로 서비스 기획과 아키텍처 설계를 총괄했습니다.",
+    ],
+    techStack: [
+      "Spring Boot",
+      "Spring Cloud",
+      "Spring Batch",
+      "Spring Data JPA",
+      "PostgreSQL",
+      "Redis",
+      "JWT",
+      "OAuth",
+      "Spring AI",
+      "gRPC",
+      "REST API",
+      "Kafka",
+      "Docker",
+      "k8s",
+      "ELK",
+      "MSA",
     ],
     highlights: [
       {
@@ -125,7 +145,18 @@ export const projects: Project[] = [
     role: "백엔드 개발",
     url: "/portfolio/next-frame-payment",
     summary: [
-      "공연 좌석 예매 플랫폼의 Payment Server를 DDD·헥사고날 아키텍처로 설계·구현했습니다.",
+      "실시간 좌석 선점과 QR 티켓 발급을 포함한 공연 좌석 예매 플랫폼의 Payment Server를 DDD·헥사고날 아키텍처로 설계·구현했습니다.",
+    ],
+    techStack: [
+      "Java 21",
+      "Spring Boot",
+      "QueryDsl",
+      "PostgreSQL",
+      "Resilience4j(CircuitBreaker)",
+      "DDD",
+      "헥사고날 아키텍처",
+      "Outbox Pattern",
+      "Toss Payments",
     ],
     highlights: [
       {
@@ -167,8 +198,6 @@ export const careers: Career[] = [
     ],
   },
 ];
-
-export const skills: string[] = ["[TODO]"];
 
 export const education: Education[] = [
   {

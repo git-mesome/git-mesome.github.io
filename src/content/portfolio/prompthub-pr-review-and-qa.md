@@ -29,6 +29,7 @@ summary:
 - 개인 기능 구현 시간을 줄이는 대신, 팀 전체 코드베이스를 리뷰 관점에서 파악
 
 ![CodeFlow로 apigateway 서비스를 정적 분석한 화면 - Health Score 97/100, 120개 파일·9,321줄. 우측 Design Patterns & Anti-Patterns 패널에 God Object 안티패턴이 2개 파일에서 발견됨(15개 이상 함수를 가진 파일, 책임 분리 필요). 이 리포트를 근거로 리팩터 이슈를 추가 생성](../../assets/portfolio/prompthub/pr-review-and-qa/codeflow-apigateway-analysis.png)
+*CodeFlow 정적 분석 - apigateway Health Score 97/100*
 
 ## 판단 및 진행
 
@@ -37,6 +38,7 @@ summary:
 담당 기능 구현 작업도 있어 PR을 실시간으로 확인하기 어려웠던 문제는, **AI로 개인용 GitHub 대시보드를 만들어** 해결했습니다. "**내가 열어둔 PR·리뷰 요청된 PR·멘션된 항목**"을 한 화면에서 모아 보고, 정각마다 한 번씩 몰아서 리뷰하는 규칙을 세웠습니다.
 
 ![개인용 GitHub 대시보드 - Minseo Kim(@git-mesome) 계정 기준 내가 열어둔 PR·리뷰 요청된 PR·멘션된 항목 3개 패널을 한 화면에 모아 보여줌. AI로 직접 만들어 정각마다 PR 현황을 확인하는 용도로 사용](../../assets/portfolio/prompthub/pr-review-and-qa/personal-pr-dashboard.png)
+*AI로 만든 개인용 GitHub 대시보드 - 내가 열어둔 PR·리뷰 요청·멘션 모아보기*
 
 QA는 아래 순서로 진행했습니다.
 
@@ -50,8 +52,9 @@ QA는 아래 순서로 진행했습니다.
 8. 개발서버에 직접 들어가 버그를 확인하고, 발견하면 프론트 또는 백엔드에 버그·리팩터 이슈를 생성
 
 ![팀 발표자료 - 로컬 테스트 → Swagger 스펙 검증 → 프론트 배포 → 개발서버 E2E 순으로 진행한 4단계 검증 프로세스. 위 QA 절차의 7·8번(스웨거 확인, 개발서버 확인)이 이 프로세스의 일부로 진행됨](../../assets/portfolio/prompthub/pr-review-and-qa/team-test-process-slide.png)
+*팀 검증 프로세스 - 로컬 테스트 → Swagger 검증 → 프론트 배포 → 개발서버 E2E*
 
-## **운영 및 회고**
+**운영 및 회고**
 
 리뷰어 1명 구조는 병목이 될 수밖에 없었고, 실제로 팀원들이 리뷰를 기다린 적이 있습니다.
 

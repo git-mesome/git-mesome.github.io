@@ -3,7 +3,7 @@ title: "상품 콘텐츠 근접 중복(Near-Duplicate) 탐지"
 company: "AI Agent 마켓플레이스"
 period: "2026.06 - 2026.07 (2개월)"
 role: "상품 콘텐츠 표절 탐지 설계·구현 (product-service ↔ ai-service 계약 포함) - 블록체인/NFT 대신 정규화 해시로 표절 사전 차단"
-techStack: ["Spring Boot", "pgvector", "Spring AI (OpenAI)", "MSA"]
+techStack: ["Spring Boot", "pgvector", "Spring AI", "MSA"]
 order: 3
 type: "project"
 summary:
@@ -29,8 +29,8 @@ summary:
 - **대안 비교 후 채택** : 기존 임베딩 재사용안과 정규화 해시값를 2가지 안을 비교해 해시 완전일치 채택  
  완전일치 특성상 **오탐이 구조적으로 발생하지 않으며**, OpenAI 추가 호출과 신규 인프라 추가 없음
 - **원본 판별 기준 정립** : 기존 타임스탬프 2종의 오판 시나리오를 각각 규명하고, 전용 컬럼 신설과 DB 트리거로 다중 파드 환경에서 전순서(total order) 보장
-- **동시성 실패모드 분리 대응** : 자기 붕괴는 추가 구조 없이 조건식만으로 제거했고, TOCTOU 미탐은 승격 조건을 명시해 의도적으로 보류
-- **작업 범위** — product-service ↔ ai-service 계약 변경(검수요청 payload 확장)과 구현 담당했고, PR #636 · #675를 병합 완료
+- **동시성 실패모드 분리 대응** : 자기 붕괴는 추가 구조 없이 조건식만으로 제거했고, TOCTOU(Time-of-check to time-of-use) 미탐은 승격 조건을 명시해 의도적으로 보류
+- **작업 범위** : product-service ↔ ai-service 계약 변경(검수요청 payload 확장)과 구현 담당
 
 ## 설계 및 구현
 
@@ -95,12 +95,12 @@ summary:
 - **①**  `content_hash_at < 본인`이라는 비대칭 비교 조건이 조건식 자체로 없앱니다. 진짜 먼저 확정된 쪽은 자기보다 이른 로우를 절대 찾을 수 없기 때문이며, 추가 구조가 필요하지 않았습니다.
 - **②** 값 비교로 닫을 수 없는 **가시성(visibility) 문제**입니다. 커밋이 상대 조회에 아직 보이지 않으면 값이 아무리 정확해도 거를 수 없습니다. 닫으려면 별도 직렬화(유니크 제약 선점 테이블 등)가 필요한데, 실제 동시 표절 제출이 관측된 적이 없어 지금은 만들지 않기로 범위를 그었습니다.
 
-**추가로 제거한 순서 역전 요인 -  파드 간 시계 스큐**
+**추가로 제거한 순서 역전 요인 - 파드 간 클럭 스큐(clock skew)**
 
-- `content_hash_at`을 앱에서 `LocalDateTime.now()`로 찍으면, product-service가 여러 파드로 떠 있어 파드 간 시계 스큐로 순서가 역전될 수 있었습니다. **나중에 낸 표절자가 더 이른 시각을 받는 경우**입니다.
-- 이를 막기 위해 값 생성을 앱이 아니라 DB 트리거(`BEFORE INSERㄴT OR UPDATE`, 해시가 실제로 바뀐 분기에서만 `now()`)로 옮겨, 단일 DB 시계 기준 전순서를 보장했습니다.
+- `content_hash_at`을 앱에서 `LocalDateTime.now()`로 찍으면, product-service가 여러 파드로 떠 있어 파드 간 클럭 스큐로 순서가 역전될 수 있었습니다. **나중에 낸 표절자가 더 이른 시각을 받는 경우**입니다.
+- 이를 막기 위해 값 생성을 앱이 아니라 DB 트리거(`BEFORE INSERT OR UPDATE`, 해시가 실제로 바뀐 분기에서만 `now()`)로 옮겨, 단일 DB 시계 기준 전순서를 보장했습니다.
 
-5. 새 이벤트 대신 기존 검수 흐름에 신호만 추가
+**5. 새 이벤트 대신 기존 검수 흐름에 신호만 추가**
 
 > **판단: 새 이벤트를 만드는 대신 기존** `PRODUCT_REVIEW_REQUESTED`**에** `duplicateOfProductId` **필드 하나만 얹었습니다.**
 
@@ -109,6 +109,7 @@ summary:
 - 이벤트가 유실되더라도 상품은 PENDING_REVIEW에 머무를 뿐이므로, **조용히 승인되는 fail-open 위험이 없습니다.**
 
 ![표절 탐지 검수 흐름 시퀀스 다이어그램 - product-service가 content 정규화 해시 계산 후 DB 트리거로 content_hash_at 확정, 같은 해시를 가진 타 판매자 상품 중 더 이른 것을 조회해 duplicateOfProductId를 포함해 PRODUCT_REVIEW_REQUESTED 발행, ai-service로 전달. duplicateOfProductId가 있으면 OpenAI 호출 없이 자동 반려, 없으면 기존 LLM 정책 검수 수행](../../assets/portfolio/prompthub/content-duplicate-detection/review-sequence.svg)
+*표절 탐지 검수 흐름 - 정규화 해시 일치 시 OpenAI 호출 없이 자동 반려*
 
 ## 의도적으로 남긴 것
 

@@ -34,14 +34,19 @@ summary:
 ![Notion 업무배치 뷰 - 팀원별 담당 업무 개수를 도넛 차트로 비교, 초기 업무 배치 회의에서 팀원 간 업무량 편차를 한눈에 파악해 조정하는 데 사용](../../assets/portfolio/prompthub/issue-management/workload-view.png)
 ![Notion 우선순위 뷰 - 마감일 뷰에 우선순위 필터를 추가해 P1~P4별 작업 개수를 표시, PO가 팀원에게 우선적으로 처리해야 할 작업을 암시하는 데 활용](../../assets/portfolio/prompthub/issue-management/priority-view.png)
 
+*좌: 팀원별 업무배치 도넛 차트 · 우: 우선순위(P1~P4)별 작업 뷰*
+
 팀원들은 이 페이지만 보면 오늘까지 자신이 뭘 해야 하는지 바로 파악할 수 있었습니다.
 
 ![Notion 일정 보고 테이블 뷰 - 본인(김민서) 담당 기능별 예상 난이도·진행상태·우선순위·마감일 목록 (팀원 정보는 보호를 위해 비공개 처리)](../../assets/portfolio/prompthub/issue-management/schedule-table.png)
 ![Notion 캘린더 뷰 - 위 테이블의 마감일이 캘린더 데이터베이스와 연동되어 날짜별로 시각화됨](../../assets/portfolio/prompthub/issue-management/schedule-calendar.png)
 
+*좌: 담당 기능별 일정 테이블 · 우: 마감일 캘린더 뷰*
+
 매일 아침 데일리 스크럼으로 진행 상황을 확인해 Notion에 반영했습니다.
 
 ![Notion 작업진척도 뷰 - 팀원별 완료 작업 개수를 막대그래프로 표시, 데일리 스크럼에서 확인한 진행 상황을 반영](../../assets/portfolio/prompthub/issue-management/progress-view.png)
+*팀원별 작업진척도 - 완료 작업 개수 막대그래프*
 
 또 하나는 이슈 공유였습니다. 초기 팀원들이 버그나 이슈를 먼저 공유하는 것을 망설이는 분위기여서 제가 먼저 GitHub에 올라온 이슈를 확인하고 담당자에게 직접 질문을 던졌습니다.  
 한두 명이 답하기 시작하자 이후에는 "혹시 공유할 만한 이슈나 버그 있나요?"라고 물으면 해당하는 사람이 바로 답하는 흐름이 생겼고, 지식 공유가 자연스러운 문화로 자리 잡았습니다.

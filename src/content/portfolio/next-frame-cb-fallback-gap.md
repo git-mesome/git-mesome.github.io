@@ -31,10 +31,12 @@ PG 호출 전 Payment/Refund를 REQUESTED로 선저장하는 방식으로 최소
 실패 원인을 나눠서 처리했습니다. CircuitBreaker OPEN(요청 자체가 PG에 전달되지 않음)은 안전하게 FAILED로 확정하고, 외부 호출 실패(PG 처리 여부가 불확실한 경우)는 REQUESTED로 유지해 재조회·재시도 대상으로만 남겼습니다.
 
 ![CB fallback 실패 원인 분기 다이어그램 - PG 호출 실패 시 원인을 분기: CircuitBreaker OPEN(요청이 PG에 전달 안 됨)은 FAILED 확정(예약 취소)으로, 외부 호출 실패(PG 처리 여부 불확실)는 REQUESTED 유지(재조회·재시도 대상)로 구분](../../assets/portfolio/next-frame/payment/cb-fallback-decision.svg)
+*CB fallback 실패 원인 분기 - CircuitBreaker OPEN은 FAILED, 외부 호출 실패는 REQUESTED 유지*
 
 구현 도중 동시 confirm 요청의 경합 조건도 함께 발견했습니다 — 원인과 조치는 [별도 트러블슈팅 문서](/portfolio/next-frame-payment-confirm-race) 참고.
 
 ![confirmPayment 플로우 다이어그램 - PG 호출 전 REQUESTED 선저장 후 CircuitBreaker로 PG confirmPayment 호출, 정상 응답 시 applyConfirmResult → PaymentApprovedEvent → Outbox(티켓 발급·예약 취소) 발행. CB OPEN은 FAILED로 확정 종료, 외부 호출 실패는 REQUESTED 유지(재조회 대상)로 구분](../../assets/portfolio/next-frame/payment/confirm-flow.svg)
+*confirmPayment 플로우 - REQUESTED 선저장 후 PG 호출, 실패 원인별 확정 분기*
 
 ## 결과
 
