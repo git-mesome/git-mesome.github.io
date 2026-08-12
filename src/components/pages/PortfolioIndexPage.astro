@@ -1,0 +1,249 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import { groupPortfolioEntries } from "../../lib/portfolioGroups.ts";
+import { getLang, ui, splitLocaleId, withLangPrefix } from "../../lib/i18n.ts";
+
+const lang = getLang(Astro.currentLocale);
+const s = ui[lang];
+
+const allEntries = await getCollection("portfolio");
+const localeEntries = allEntries.filter((entry) => splitLocaleId(entry.id).lang === lang);
+const groups = groupPortfolioEntries(localeEntries);
+
+function hrefFor(id: string) {
+  return withLangPrefix(lang, `/portfolio/${splitLocaleId(id).baseId}`);
+}
+---
+
+<Layout title={s.portfolio} description={s.portfolioIndexDescription}>
+  <h1>Portfolio</h1>
+
+  {
+    groups.map((group) => (
+      <section class="company-section">
+        {group.company && (
+          <header class="company-header">
+            <h2>{group.company}</h2>
+            {group.period && <span class="company-period">{group.period}</span>}
+          </header>
+        )}
+
+        {group.projects.length > 0 && (
+          <>
+            {(group.troubleshooting.length > 0 || group.practice.length > 0) && (
+              <p class="section-label">{s.planningLabel}</p>
+            )}
+            <ul class="entry-list">
+              {group.projects.map((item) => (
+                <li>
+                  <a class="entry-head" href={hrefFor(item.id)}>
+                    <div class="entry-head-row">
+                      <div class="entry-head-title-group">
+                        <h3 class="entry-title">{item.data.title}</h3>
+                        <span class="tech-line">{item.data.techStack.join(" · ")}</span>
+                      </div>
+                      <span class="arrow" aria-hidden="true">→</span>
+                    </div>
+                  </a>
+                  {item.data.summary && item.data.summary.length > 0 && (
+                    <ul class="highlight-list">
+                      {item.data.summary.map((line) => <li>{line}</li>)}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {group.troubleshooting.length > 0 && (
+          <>
+            <p class="section-label">{s.troubleshootingLabel}</p>
+            <ul class="entry-list">
+              {group.troubleshooting.map((item) => (
+                <li>
+                  <a class="entry-head" href={hrefFor(item.id)}>
+                    <div class="entry-head-row">
+                      <h3 class="entry-title ts-title">{item.data.title}</h3>
+                      <span class="arrow ts-arrow" aria-hidden="true">→</span>
+                    </div>
+                  </a>
+                  {item.data.summary && item.data.summary.length > 0 && (
+                    <p class="ts-summary">{item.data.summary.join(" ")}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {group.practice.length > 0 && (
+          <>
+            <p class="section-label">{s.practiceLabel}</p>
+            <ul class="entry-list">
+              {group.practice.map((item) => (
+                <li>
+                  <a class="entry-head" href={hrefFor(item.id)}>
+                    <div class="entry-head-row">
+                      <div class="entry-head-title-group">
+                        <h3 class="entry-title">{item.data.title}</h3>
+                        <span class="tech-line">{item.data.techStack.join(" · ")}</span>
+                      </div>
+                      <span class="arrow" aria-hidden="true">→</span>
+                    </div>
+                  </a>
+                  {item.data.summary && item.data.summary.length > 0 && (
+                    <ul class="highlight-list">
+                      {item.data.summary.map((line) => <li>{line}</li>)}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
+    ))
+  }
+</Layout>
+
+<style>
+  h1 {
+    margin-block-end: 2rem;
+  }
+
+  .company-section {
+    margin-block-end: 3rem;
+  }
+
+  .company-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.4rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.4rem;
+    margin-block-end: 1.25rem;
+  }
+
+  .company-header h2 {
+    margin: 0;
+  }
+
+  .company-period {
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .entry-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .entry-list > li {
+    padding-block: 1rem;
+    border-top: 1px solid var(--color-border-soft);
+  }
+
+  .entry-list > li:first-child {
+    border-top: none;
+  }
+
+  .entry-head {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .entry-head-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .entry-head-title-group {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .entry-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--color-fg);
+    min-width: 0;
+    transition: color 0.15s ease;
+  }
+
+  .entry-head:hover .entry-title,
+  .entry-head:hover .arrow {
+    color: var(--color-accent);
+  }
+
+  .ts-title {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .ts-arrow {
+    font-size: 13px;
+  }
+
+  .tech-line {
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .arrow {
+    flex-shrink: 0;
+    color: var(--color-subtle);
+    font-size: 14px;
+    transition: color 0.15s ease;
+  }
+
+  .highlight-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--color-muted);
+  }
+
+  .ts-summary {
+    margin: 0.25rem 0 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+
+  .section-label {
+    margin: 2rem 0 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .company-section > .section-label:first-of-type {
+    margin-top: 0;
+  }
+</style>

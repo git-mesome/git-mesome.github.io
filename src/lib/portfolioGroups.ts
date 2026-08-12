@@ -9,7 +9,13 @@ export interface PortfolioGroup {
 }
 
 // 표시 순서: 최신 경력부터. 목록에 없는 company는 맨 뒤로 밀림.
-const COMPANY_ORDER = ["AI Agent 마켓플레이스", "NextFrame (WiSoft)", "Graduate Research"];
+// 영문 콘텐츠(.en.md)는 company 값도 번역돼 있어 두 언어 표기를 모두 등록해둔다.
+const COMPANY_ORDER = [
+  "AI Agent 마켓플레이스",
+  "AI Agent Marketplace",
+  "NextFrame (WiSoft)",
+  "Graduate Research",
+];
 
 export function groupPortfolioEntries(entries: CollectionEntry<"portfolio">[]): PortfolioGroup[] {
   const byCompany = new Map<string | null, CollectionEntry<"portfolio">[]>();

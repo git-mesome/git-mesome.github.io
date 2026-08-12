@@ -1,0 +1,65 @@
+---
+import { render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+interface Props {
+  entry: CollectionEntry<"portfolio">;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const meta = entry.data.company
+  ? `${entry.data.company} · ${entry.data.period}`
+  : entry.data.period;
+---
+
+<Layout title={entry.data.title} description={`${meta} · ${entry.data.role}`}>
+  <article>
+    <header class="entry-header">
+      <p class="meta">{meta}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="role">{entry.data.role}</p>
+      <ul class="tech-stack">
+        {entry.data.techStack.map((tech) => <li>{tech}</li>)}
+      </ul>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .entry-header {
+    margin-block-end: 2rem;
+  }
+
+  .meta {
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .role {
+    color: var(--color-muted);
+    font-size: 14px;
+  }
+
+  .tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+  }
+
+  .tech-stack li {
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 13px;
+  }
+
+</style>

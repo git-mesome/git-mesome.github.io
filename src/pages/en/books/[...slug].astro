@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import BookDetailPage from "../../../components/pages/BookDetailPage.astro";
+import { splitLocaleId } from "../../../lib/i18n.ts";
+
+export async function getStaticPaths() {
+  const allBooks = await getCollection("books");
+  const koFeatured = allBooks.filter(
+    (book) => book.data.featured && splitLocaleId(book.id).lang === "ko"
+  );
+  const enByBase = new Map(
+    allBooks
+      .filter((book) => splitLocaleId(book.id).lang === "en")
+      .map((book) => [splitLocaleId(book.id).baseId, book])
+  );
+  // 영문 번역이 아직 없는 featured 도서는 한국어 원문으로 폴백
+  return koFeatured.map((book) => ({
+    params: { slug: book.id },
+    props: { book: enByBase.get(book.id) ?? book },
+  }));
+}
+
+const { book } = Astro.props;
+---
+
+<BookDetailPage book={book} />

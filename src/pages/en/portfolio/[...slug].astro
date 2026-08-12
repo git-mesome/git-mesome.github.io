@@ -1,12 +1,12 @@
 ---
 import { getCollection } from "astro:content";
-import PortfolioDetailPage from "../../components/pages/PortfolioDetailPage.astro";
-import { splitLocaleId } from "../../lib/i18n.ts";
+import PortfolioDetailPage from "../../../components/pages/PortfolioDetailPage.astro";
+import { splitLocaleId } from "../../../lib/i18n.ts";
 
 export async function getStaticPaths() {
   const entries = await getCollection("portfolio");
   return entries
-    .filter((entry) => splitLocaleId(entry.id).lang === "ko")
+    .filter((entry) => splitLocaleId(entry.id).lang === "en")
     .map((entry) => ({
       params: { slug: splitLocaleId(entry.id).baseId },
       props: { entry },

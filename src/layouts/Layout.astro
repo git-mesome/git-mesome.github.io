@@ -1,6 +1,7 @@
 ---
 import Sidebar from "../components/Sidebar.astro";
 import "../styles/global.css";
+import { getLang, ui, otherLangHref } from "../lib/i18n.ts";
 
 interface Props {
   title: string;
@@ -8,16 +9,19 @@ interface Props {
   ogImage?: string;
 }
 
-const { description = "김민서의 이력서·포트폴리오", ogImage } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const s = ui[lang];
+const { description = s.defaultDescription, ogImage } = Astro.props;
 
-// 브라우저 탭 제목은 페이지 상관없이 사이트 전체에서 통일
-const pageTitle = "김민서 : 항상 건강하세요.";
+// 브라우저 탭 제목은 언어별로 통일 (페이지마다 달라지지 않음)
+const pageTitle = s.pageTitle;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
+const alternateHref = new URL(otherLangHref(lang, Astro.url.pathname), Astro.site);
 ---
 
 <!doctype html>
-<html lang="ko">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,6 +32,8 @@ const ogImageURL = ogImage ? new URL(ogImage, Astro.site) : undefined;
     />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" hreflang={lang === "en" ? "ko" : "en"} href={alternateHref} />
+    <link rel="alternate" hreflang="x-default" href={lang === "en" ? alternateHref : canonicalURL} />
 
     <title>{pageTitle}</title>
     <meta name="description" content={description} />

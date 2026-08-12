@@ -1,0 +1,304 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+import { getLang, ui, splitLocaleId, withLangPrefix } from "../../lib/i18n.ts";
+
+const lang = getLang(Astro.currentLocale);
+const s = ui[lang];
+
+const allEntries = await getCollection("books");
+const enByBase = new Map(
+  allEntries.filter((e) => splitLocaleId(e.id).lang === "en").map((e) => [splitLocaleId(e.id).baseId, e])
+);
+const allBooks = allEntries
+  .filter((e) => splitLocaleId(e.id).lang === "ko")
+  .sort((a, b) => b.data.readDate.valueOf() - a.data.readDate.valueOf());
+
+// 인상 깊게 읽은 책: 각 책 파일 frontmatter의 featured: true 로 직접 고름 (여기만 손보면 됨)
+const featuredBooks = allBooks.filter((book) => book.data.featured);
+const featuredCards = await Promise.all(
+  featuredBooks.map(async (book) => {
+    const source = lang === "en" ? (enByBase.get(book.id) ?? book) : book;
+    return { book, blurb: source.data.blurb, Content: (await render(source)).Content };
+  })
+);
+
+const booksByYear = new Map<number, typeof allBooks>();
+for (const book of allBooks) {
+  const year = book.data.readDate.getFullYear();
+  const list = booksByYear.get(year) ?? [];
+  list.push(book);
+  booksByYear.set(year, list);
+}
+const years = [...booksByYear.keys()].sort((a, b) => b - a);
+---
+
+<Layout title={s.books} description={s.booksIndexDescription}>
+  <h1>Books</h1>
+
+  {
+    featuredBooks.length > 0 && (
+      <section class="featured">
+        <h2>{s.featuredBooksHeading}</h2>
+        <div class="featured-grid">
+          {featuredCards.map(({ book, blurb, Content }) => (
+            <div class="featured-card" tabindex="0">
+              {book.data.cover ? (
+                <img src={book.data.cover} alt={s.coverAlt(book.data.title)} />
+              ) : (
+                <div class="cover-placeholder" aria-hidden="true">
+                  {s.todoImage}
+                </div>
+              )}
+              <div>
+                <p class="title-line">
+                  <strong>{book.data.title}</strong> <span class="author">{book.data.author}</span>
+                </p>
+                <p class="blurb">{blurb ?? s.todoBlurb}</p>
+              </div>
+              <div class="review-popover prose">
+                <Content />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="archive">
+    {
+      years.map((year) => (
+        <div class="year-group">
+          <h2 class="year-divider">{year}</h2>
+          <div class="cover-grid">
+            {booksByYear.get(year)!.map((book) =>
+              book.data.featured ? (
+                <a href={withLangPrefix(lang, `/books/${book.id}`)} class="cover-link" title={book.data.title}>
+                  {book.data.cover ? (
+                    <img src={book.data.cover} alt={s.coverAlt(book.data.title)} />
+                  ) : (
+                    <div class="cover-placeholder" aria-hidden="true">
+                      {s.todoImage}
+                    </div>
+                  )}
+                </a>
+              ) : (
+                <div class="cover-link" title={book.data.title}>
+                  {book.data.cover ? (
+                    <img src={book.data.cover} alt={s.coverAlt(book.data.title)} />
+                  ) : (
+                    <div class="cover-placeholder" aria-hidden="true">
+                      {s.todoImage}
+                    </div>
+                  )}
+                </div>
+              )
+            )}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+</Layout>
+
+<style>
+  h1 {
+    margin-block-end: 2rem;
+  }
+
+  .featured {
+    margin-block-end: 3rem;
+  }
+
+  .featured h2 {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.4rem;
+  }
+
+  .featured-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .featured-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 200px;
+    gap: 0.6rem;
+    color: var(--color-fg);
+  }
+
+  .featured-card img,
+  .featured-card .cover-placeholder {
+    width: 100%;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .featured-card:hover img,
+  .featured-card:hover .cover-placeholder,
+  .featured-card:focus-within img,
+  .featured-card:focus-within .cover-placeholder {
+    transform: scale(1.03);
+    box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.35);
+  }
+
+  .review-popover {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
+    z-index: 20;
+  }
+
+  .review-popover :global(p) {
+    margin: 0;
+  }
+
+  .review-popover :global(p + p) {
+    margin-top: 0.75rem;
+  }
+
+  .featured-card:hover .review-popover,
+  .featured-card:focus-within .review-popover {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  /* 데스크톱에서는 표지 오른쪽에 말풍선처럼 붙여서 카드와의 거리감을 없앰 */
+  @media (min-width: 768px) {
+    .review-popover {
+      top: 0;
+      left: calc(100% + 1rem);
+      right: auto;
+      width: max-content;
+      max-width: min(320px, 32vw);
+      transform: translateX(-4px);
+    }
+
+    .review-popover::before {
+      content: "";
+      position: absolute;
+      top: 28px;
+      left: -7px;
+      width: 13px;
+      height: 13px;
+      background: var(--color-bg);
+      border-left: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      transform: rotate(45deg);
+    }
+
+    .featured-card:hover .review-popover,
+    .featured-card:focus-within .review-popover {
+      transform: translateX(0);
+    }
+
+    .featured-card:last-child .review-popover {
+      left: auto;
+      right: calc(100% + 1rem);
+    }
+
+    .featured-card:last-child .review-popover::before {
+      left: auto;
+      right: -7px;
+      border: none;
+      border-right: 1px solid var(--color-border);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .featured-card:last-child:hover .review-popover,
+    .featured-card:last-child:focus-within .review-popover {
+      transform: translateX(0);
+    }
+  }
+
+  .title-line {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .title-line strong {
+    font-weight: 600;
+  }
+
+  .title-line .author {
+    font-weight: 400;
+    font-size: 14px;
+  }
+
+  .blurb {
+    font-size: 14px;
+    margin: 0.3rem 0 0;
+  }
+
+  .year-group {
+    margin-block-end: 2.5rem;
+  }
+
+  .year-divider {
+    color: var(--color-subtle);
+    font-family: var(--font-mono);
+    font-size: 17px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.4rem;
+  }
+
+  .cover-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1rem;
+  }
+
+  .cover-link {
+    display: block;
+  }
+
+  img,
+  .cover-placeholder {
+    aspect-ratio: 2 / 3;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
+  }
+
+  img {
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .cover-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 12px;
+    color: var(--color-muted);
+    background: var(--color-bg-elev);
+  }
+
+  .author {
+    color: var(--color-muted);
+    margin: 0;
+  }
+</style>
