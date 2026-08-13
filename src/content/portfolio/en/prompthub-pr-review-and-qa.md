@@ -28,8 +28,8 @@ summary:
 - Ran a separate codebase static analysis tool (CodeFlow) to generate additional issues
 - Traded personal feature implementation time for a review-level understanding of the entire team codebase
 
-![Static analysis screen of the apigateway service using CodeFlow - Health Score 97/100, 120 files, 9,321 lines. The Design Patterns & Anti-Patterns panel on the right shows a God Object anti-pattern found in 2 files (files with 15+ functions, needing responsibility separation). This report was used as the basis for creating additional refactor issues](../../../assets/portfolio/prompthub/pr-review-and-qa/codeflow-apigateway-analysis.png)
-*CodeFlow static analysis - apigateway Health Score 97/100*
+![Static analysis screen of the entire backend repo using CodeFlow - Health Score A (92/100), 1,975 files · 2,550 functions · 213,832 lines (java 47% · md 43% · yaml/yml/json/sh). Treemap organized by actual microservice folders (admin/ai/apigateway/order/payment/product/settlement/user/notification-service, etc.), with the Architecture Issues panel on the right listing 4 Unused Functions, 9 Large Files, 84 Highly Coupled files, 18 Duplicate Function Names, 3 Similar Code Blocks, 185 Architecture Violations, and 20 High Complexity Files. This report was used as the basis for creating additional refactor issues](../../../assets/portfolio/prompthub/pr-review-and-qa/codeflow-backend-full-analysis.png)
+*CodeFlow static analysis - entire backend repo Health Score A (92/100), 7 categories of Architecture Issues*
 
 ## Decisions and Process
 
