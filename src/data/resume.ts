@@ -75,7 +75,7 @@ export const basicInfo: BasicInfo = {
 
 // Resume 페이지 본문 헤드라인. 사이드바와 동기화하지 않음 - 원하는 문구로 자유롭게 수정.
 export const resumeIntro: ResumeIntro = {
-  headline: "일정을 놓치지 않고, 시간을 지키는 믿음직한 개발자입니다.",
+  headline: "일정을 놓치지 않고, 시간을 지키는 믿음직한 개발자 김민서입니다.",
   paragraphs: [
     ["정해진 기한 안에서 <strong>무엇을 남기고 무엇을 포기할지 먼저 판단하는 것</strong>을, 개발자의 기본기라고 생각합니다."],
     [

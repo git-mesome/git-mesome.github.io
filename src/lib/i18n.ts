@@ -48,6 +48,7 @@ export const ui = {
     todoBlurb: "[TODO] 짧은 리뷰",
     coverAlt: (title: string) => `${title} 표지`,
     pageTitle: "김민서 : 항상 건강하세요.",
+    printTitle: "김민서_이력서",
     defaultDescription: "김민서의 이력서·포트폴리오",
   },
   en: {
@@ -72,6 +73,7 @@ export const ui = {
     todoBlurb: "[TODO] short review",
     coverAlt: (title: string) => `${title} cover`,
     pageTitle: "Minseo Kim : Stay healthy.",
+    printTitle: "Minseo Kim Resume",
     defaultDescription: "Minseo Kim's resume & portfolio",
   },
 } as const;

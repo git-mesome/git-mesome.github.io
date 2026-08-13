@@ -59,6 +59,14 @@ const alternateHref = new URL(otherLangHref(lang, Astro.url.pathname), Astro.sit
         }
       })();
     </script>
+    <script is:inline define:vars={{ printTitle: s.printTitle, tabTitle: pageTitle }}>
+      window.addEventListener("beforeprint", function () {
+        document.title = printTitle;
+      });
+      window.addEventListener("afterprint", function () {
+        document.title = tabTitle;
+      });
+    </script>
   </head>
   <body>
     <div class="page">

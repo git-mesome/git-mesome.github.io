@@ -1,5 +1,5 @@
 import type { BasicInfo, ResumeIntro, Project, Career, Education, Award, Certificate } from "./resume.ts";
-import { basicInfo as basicInfoKo, awards as awardsKo, certificates as certificatesKo } from "./resume.ts";
+import { basicInfo as basicInfoKo, certificates as certificatesKo } from "./resume.ts";
 
 // 이름만 로마자 표기, 나머지(이메일/링크/tagline)는 언어 무관이라 그대로 재사용
 export const basicInfo: BasicInfo = {
@@ -8,7 +8,7 @@ export const basicInfo: BasicInfo = {
 };
 
 export const resumeIntro: ResumeIntro = {
-  headline: "A reliable developer who keeps schedules and never misses a deadline.",
+  headline: "A reliable developer who keeps schedules and never misses a deadline — Minseo Kim.",
   paragraphs: [
     [
       "I believe that <strong>deciding what to keep and what to cut within a fixed deadline</strong> is a developer's most basic skill.",
@@ -152,8 +152,8 @@ export const education: Education[] = [
     degree: "M.S. in Engineering",
     papers: [
       {
-        title: "산업용 IoT 환경에서의 실시간 모니터링을 위한 반응형 스트리밍 기반 프리로딩 구조",
-        venue: "한국정보통신학회논문지 (2025.09) · KCI 등재",
+        title: "A Reactive Streaming-Based Preloading Structure for Real-Time Monitoring in Industrial IoT Environments",
+        venue: "한국정보통신학회논문지 (2025.09) · KCI-indexed",
         url: "/en/portfolio/rt-rss",
         highlights: [
           "Eliminated the bottleneck of a server round-trip on every repeated-segment lookup using SSE + preloading — cut requests from 6 to 1 and improved response time by 75.7% (32.4ms → 7.9ms)",
@@ -161,11 +161,11 @@ export const education: Education[] = [
         ],
       },
       {
-        title: "RFID 기반 키 관리 애플리케이션을 통한 강의실 자원 최적화 시스템 설계",
+        title: "Design of a Classroom Resource Optimization System Using an RFID-Based Key Management Application",
         venue: "한국HCI학회 (2025.02)",
       },
       {
-        title: "소규모 기업을 위한 FIDO2 기반 공용 인증 서버 설계",
+        title: "Design of a FIDO2-Based Shared Authentication Server for Small Businesses",
         venue: "한국정보과학회 (2024.12)",
       },
     ],
@@ -176,13 +176,19 @@ export const education: Education[] = [
     degree: "B.S. in Engineering",
     papers: [
       {
-        title: "식품 쓰레기를 줄이기 위한 식재료 공유 웹 플랫폼",
+        title: "A Food Ingredient-Sharing Web Platform to Reduce Food Waste",
         venue: "한국HCI학회 (2023.02)",
       },
     ],
   },
 ];
 
-// 수상명·자격증명은 공식 한국어 명칭을 그대로 유지 (CLAUDE.md 번역 원칙)
-export const awards: Award[] = awardsKo;
+// 수상명은 사용자 요청으로 CLAUDE.md 번역 원칙(고유명사 유지)을 깨고 영역함
+export const awards: Award[] = [
+  { name: "2024 Major Lab-Based Corporate Problem-Solving PBL Program - Grand Prize", date: "2024.11" },
+  { name: "2022 K7U Belt Capstone Design Competition - Top Prize", date: "2022.11" },
+  { name: "RIS-SW/AI Capstone Design Competition - Honorable Mention", date: "2023.01" },
+  { name: "11th College of Information Technology Exhibition - Bronze Prize", date: "2022.12" },
+  { name: "2020 K7U Belt Capstone Design Competition - Excellence Award", date: "2020.11" },
+];
 export const certificates: Certificate[] = certificatesKo;
