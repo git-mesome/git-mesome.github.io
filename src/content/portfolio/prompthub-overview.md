@@ -37,6 +37,9 @@ summary:
 
 AI Agent 마켓플레이스는 admin·ai·notification·order·payment·product·user·settlement 총 8개 서비스와 API Gateway로 구성된 MSA 팀 프로젝트입니다. 팀원 4명이 각자 도메인 서비스를 구현했고, 본인은 팀 리더 겸 PO로 서비스 기획과 전체 아키텍처 설계를 맡았습니다. 이 페이지는 프로젝트 전체의 구조·기술 스택을 정리한 개요이며, 개별 의사결정과 트러블슈팅은 아래 [관련 문서](#관련-문서)에 각각 분리해 기록했습니다.
 
+[Backend Github Repo 바로가기](https://github.com/prgrms-be-adv-devcourse/beadv6_6_3JMT_BE)  
+[Frontend Github Repo 바로가기](https://github.com/prgrms-be-adv-devcourse/beadv6_6_3JMT_FE)
+
 ## 시스템 아키텍처
 
 ![AWS 기반 인프라 아키텍처 - Kubernetes 클러스터(Control Plane/Work Node), Spring Cloud Gateway·Eureka·Config, 8개 Spring Boot 마이크로서비스, Kafka, PostgreSQL/Redis/Elasticsearch, GitHub Actions CI/CD, Observability(fluentbit/Logstash/Elasticsearch/Kibana)](../../assets/portfolio/prompthub/overview/architecture.png)
@@ -74,11 +77,6 @@ Kibana로 gateway 액세스 로그·결제 감사 로그·서비스별 요청 �
 
 ![Kibana 대시보드 - 전체 요청 수, 상태 코드별 응답 수, gateway 응답 시간 p50/p95/p99 백분위](../../assets/portfolio/prompthub/overview/monitoring-dashboard.png)
 *Kibana 대시보드 - 요청 수·상태 코드별 응답 수·응답 시간 p50/p95/p99*
-
-## Github Repository
-
-- [Backend](https://github.com/prgrms-be-adv-devcourse/beadv6_6_3JMT_BE)
-- [Frontend](https://github.com/prgrms-be-adv-devcourse/beadv6_6_3JMT_FE)
 
 ## 관련 문서
 
